@@ -170,6 +170,15 @@
                     <Line X1="0" Y1="0" X2="0" Y2="1" Stroke="{Binding ElementName=CrosshairLine, Path=Stroke}" StrokeThickness="{Binding ElementName=CrosshairLine, Path=StrokeThickness}" 
                           Stretch="Uniform" HorizontalAlignment="Center" StrokeDashArray="{Binding ElementName=CrosshairLine, Path=StrokeDashArray}"/>
                 </Grid>
+
+                <Viewbox x:Name="PreStartCountdownViewbox" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         IsHitTestVisible="False" Visibility="Collapsed" Panel.ZIndex="10">
+                    <TextBlock x:Name="PreStartCountdownText" Text="3" FontSize="200" FontWeight="Bold" Foreground="#FF1E6FFF" TextAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.7" Color="#FF042A66"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </Viewbox>
             </Grid>
         </Border>
 

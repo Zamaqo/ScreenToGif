@@ -73,6 +73,18 @@
             </Grid>
         </Grid>
 
+        <Canvas Grid.Row="1" Grid.Column="1" IsHitTestVisible="False" Panel.ZIndex="5"
+                Width="{Binding ElementName=SelectionRectangle, Path=Width}" Height="{Binding ElementName=SelectionRectangle, Path=Height}">
+            <Viewbox x:Name="PreStartCountdownViewbox" Visibility="Collapsed" Stretch="Uniform" StretchDirection="DownOnly"
+                     Width="{Binding ElementName=SelectionRectangle, Path=Width}" Height="{Binding ElementName=SelectionRectangle, Path=Height}">
+                <TextBlock x:Name="PreStartCountdownText" Text="3" FontSize="200" FontWeight="Bold" Foreground="#FF1E6FFF" TextAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.7" Color="#FF042A66"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Viewbox>
+        </Canvas>
+
         <!--Thumbs-->
         <Border Grid.Row="1" Grid.Column="2" x:Name="HorizontalBorder" Width="10" Height="30" BorderThickness="0,1,1,0" Background="{DynamicResource Panel.Background.Level2}" 
                 BorderBrush="{DynamicResource Element.Border}" CornerRadius="0,15,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="SizeAll" 

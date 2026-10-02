@@ -92,6 +92,17 @@ public partial class RegionSelection : Window
         RenderOptions.SetEdgeMode(SelectionRectangle, EdgeMode.Unspecified);
     }
 
+    public void ShowCountdown(int seconds)
+    {
+        PreStartCountdownText.Text = seconds.ToString();
+        PreStartCountdownViewbox.Visibility = Visibility.Visible;
+    }
+
+    public void HideCountdown()
+    {
+        PreStartCountdownViewbox.Visibility = Visibility.Collapsed;
+    }
+
 
     private void Window_DpiChanged(object sender, DpiChangedEventArgs e)
     {

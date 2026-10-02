@@ -550,6 +550,10 @@ internal class ApplicationViewModel : ApplicationBaseViewModel
         if (editor == null)
         {
             editor = new Editor { Project = project };
+
+            if (project != null)
+                editor.OpenOnPlaybackTab();
+
             editor.Closed += (sender, args) => CloseOrNot();
             editor.Show();
         }
@@ -565,7 +569,10 @@ internal class ApplicationViewModel : ApplicationBaseViewModel
                 editor.WindowState = WindowState.Normal;
 
             if (project != null)
+            {
+                editor.OpenOnPlaybackTab();
                 editor.LoadProject(project, true, false);
+            }
             else if (openMedia)
                 editor.LoadFromArguments();
         }

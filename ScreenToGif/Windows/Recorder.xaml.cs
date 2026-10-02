@@ -641,6 +641,17 @@ public partial class Recorder
 
     #region Timers
 
+    private void ShowPreStartCountdown(int seconds)
+    {
+        PreStartCountdownText.Text = seconds.ToString();
+        PreStartCountdownViewbox.Visibility = Visibility.Visible;
+    }
+
+    private void HidePreStartCountdown()
+    {
+        PreStartCountdownViewbox.Visibility = Visibility.Collapsed;
+    }
+
     private void PreStart_Elapsed(object sender, EventArgs e)
     {
         if (_preStartCount >= 1)
@@ -648,21 +659,31 @@ public partial class Recorder
             Title = "ScreenToGif - " + LocalizationHelper.Get("S.Recorder.PreStarting");
             DisplayTimer.SetElapsed(-_preStartCount);
             Splash.SetTime(-_preStartCount);
+            ShowPreStartCountdown(_preStartCount);
             _preStartCount--;
             return;
         }
 
         _preStartTimer.Stop();
-        Title = "ScreenToGif";
-        IsRecording = true;
+        HidePreStartCountdown();
 
-        StartCapture();
+        // Let the countdown leave the screen before the first frame is captured.
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (Stage != RecorderStages.PreStarting)
+                return;
 
-        Stage = RecorderStages.Recording;
-        AutoFitButtons();
+            Title = "ScreenToGif";
+            IsRecording = true;
 
-        if (Arguments.StartCapture && Arguments.Limit > TimeSpan.Zero)
-            _limitTimer.Start();
+            StartCapture();
+
+            Stage = RecorderStages.Recording;
+            AutoFitButtons();
+
+            if (Arguments.StartCapture && Arguments.Limit > TimeSpan.Zero)
+                _limitTimer.Start();
+        }), DispatcherPriority.Background);
     }
 
     private void FollowTimer_Tick(object sender, EventArgs e)
@@ -894,6 +915,7 @@ public partial class Recorder
 
                         Title = $"ScreenToGif ({LocalizationHelper.Get("S.Recorder.PreStart")} {UserSettings.All.PreStartValue}s)";
                         DisplayTimer.SetElapsed(-UserSettings.All.PreStartValue);
+                        ShowPreStartCountdown(UserSettings.All.PreStartValue);
 
                         _preStartCount = UserSettings.All.PreStartValue - 1;
                         _preStartTimer.Start();
@@ -1084,7 +1106,10 @@ public partial class Recorder
 
             //Stop the pre-start timer to kill pre-start warming up.
             if (Stage == RecorderStages.PreStarting)
+            {
                 _preStartTimer.Stop();
+                HidePreStartCountdown();
+            }
 
             Stage = RecorderStages.Stopped;
 

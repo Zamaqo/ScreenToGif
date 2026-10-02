@@ -35,3 +35,95 @@
 
 ----------------------------------
 
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/02/2026 14:33:49
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+
+► Title - 
+	Purging cache
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/02/2026 14:34:30
+▬ Message - 
+	Could not find a part of the path 'C:\Users\Mark\AppData\Local\Temp\ScreenToGif'.
+○ Type - 
+	System.IO.DirectoryNotFoundException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Void GetFindData(System.String, Boolean, Boolean, WIN32_FIND_DATA ByRef)
+♠ StackTrace - 
+   at System.IO.FileSystem.GetFindData(String fullPath, Boolean isDirectory, Boolean ignoreAccessDenied, WIN32_FIND_DATA& findData)
+   at System.IO.FileSystem.RemoveDirectory(String fullPath, Boolean recursive)
+   at ScreenToGif.Util.StorageUtils.PurgeCache() in C:\buildslocal\ScreenToGif\ScreenToGif\Util\StorageUtils.cs:line 21
+
+----------------------------------
+
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/02/2026 14:34:39
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/02/2026 14:41:00
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+
+► Title - 
+	Purging cache
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/02/2026 14:41:14
+▬ Message - 
+	Could not find a part of the path 'C:\Users\Mark\AppData\Local\Temp\ScreenToGif'.
+○ Type - 
+	System.IO.DirectoryNotFoundException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Void GetFindData(System.String, Boolean, Boolean, WIN32_FIND_DATA ByRef)
+♠ StackTrace - 
+   at System.IO.FileSystem.GetFindData(String fullPath, Boolean isDirectory, Boolean ignoreAccessDenied, WIN32_FIND_DATA& findData)
+   at System.IO.FileSystem.RemoveDirectory(String fullPath, Boolean recursive)
+   at ScreenToGif.Util.StorageUtils.PurgeCache() in C:\buildslocal\ScreenToGif\ScreenToGif\Util\StorageUtils.cs:line 21
+
+----------------------------------
+

@@ -213,6 +213,7 @@ namespace ScreenToGif.Windows
         private Action<object, RoutedEventArgs> _applyAction = null;
 
         private bool _abortLoading;
+        private bool _openOnPlaybackTab;
 
         /// <summary>
         /// Lock used to prevent firing multiple times (at the same time) both the Activated/Deactivated events.
@@ -254,6 +255,9 @@ namespace ScreenToGif.Windows
 
             if (Project != null)
             {
+                if (_openOnPlaybackTab)
+                    PlaybackTab.IsSelected = true;
+
                 ShowProgress(LocalizationHelper.Get("S.Editor.Preparing"), Project.Frames.Count, true);
 
                 Cursor = Cursors.AppStarting;
@@ -646,12 +650,24 @@ namespace ScreenToGif.Windows
             ShowHint("S.Hint.NewAnimation");
         }
 
+        /// <summary>
+        /// Opens the Playback tab once the current project finishes loading.
+        /// </summary>
+        internal void OpenOnPlaybackTab()
+        {
+            _openOnPlaybackTab = true;
+
+            if (IsLoaded && !IsLoading)
+                PlaybackTab.IsSelected = true;
+        }
+
         public void RecorderCallback(ProjectInfo project)
         {
             Activate();
 
             if (project?.Any == true)
             {
+                OpenOnPlaybackTab();
                 LoadProject(project);
                 ShowHint("S.Hint.NewRecording");
             }
@@ -3677,6 +3693,9 @@ namespace ScreenToGif.Windows
             if (Project.Any)
                 FilledList = true;
 
+            var openOnPlayback = _openOnPlaybackTab;
+            _openOnPlaybackTab = false;
+
             if (!result)
             {
                 CancelLoadingButton.IsEnabled = true; //TODO: Is this right?
@@ -3702,6 +3721,9 @@ namespace ScreenToGif.Windows
 
             FrameListView.SelectedIndex = -1;
             FrameListView.SelectedIndex = 0; //TODO: Get the latest selected frame if it's the same project.
+
+            if (openOnPlayback)
+                PlaybackTab.IsSelected = true;
             ZoomBoxControl.PixelSize = Project.Frames[0].Path.ScaledSize();
             ZoomBoxControl.ImageScale = Project.Frames[0].Path.ScaleOf();
             ZoomBoxControl.RefreshImage();

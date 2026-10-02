@@ -770,7 +770,7 @@
                 </Grid>
             </n:AwareTabItem>
 
-            <n:AwareTabItem Header="{DynamicResource S.Editor.Playback}" Icon="{StaticResource Vector.Play}">
+            <n:AwareTabItem x:Name="PlaybackTab" Header="{DynamicResource S.Editor.Playback}" Icon="{StaticResource Vector.Play}">
                 <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}" Effect="{StaticResource Shadow.Invariant}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
