@@ -1561,7 +1561,7 @@
     <DrawingBrush x:Key="Vector.Recorder.Old" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="#ffffffff" Geometry="F1 M 40.000,27.000 L -0.000,27.000 L -0.000,0.000 L 40.000,0.000 L 40.000,27.000 Z">
+                <GeometryDrawing Brush="#ffa8a8a8" Geometry="F1 M 40.000,27.000 L -0.000,27.000 L -0.000,0.000 L 40.000,0.000 L 40.000,27.000 Z">
                     <GeometryDrawing.Pen>
                         <Pen Thickness="0.8" Brush="#ffaaaaaa" MiterLimit="1.0"/>
                     </GeometryDrawing.Pen>
