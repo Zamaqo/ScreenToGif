@@ -125,6 +125,7 @@
         
         <!--Hollow part-->
         <Border BorderBrush="{Binding ElementName=RecorderLightWindow, Path=BorderBrush}" BorderThickness="{Binding ElementName=RecorderLightWindow, Path=BorderThickness}">
+            <Grid>
             <Grid x:Name="GuidelinesGrid">
                 <Grid Visibility="{Binding Source={x:Static t:UserSettings.All}, Path=DisplayThirdsGuideline, Converter={StaticResource Bool2Visibility}}">
                     <Grid.RowDefinitions>
@@ -170,15 +171,12 @@
                     <Line X1="0" Y1="0" X2="0" Y2="1" Stroke="{Binding ElementName=CrosshairLine, Path=Stroke}" StrokeThickness="{Binding ElementName=CrosshairLine, Path=StrokeThickness}" 
                           Stretch="Uniform" HorizontalAlignment="Center" StrokeDashArray="{Binding ElementName=CrosshairLine, Path=StrokeDashArray}"/>
                 </Grid>
+            </Grid>
 
-                <Viewbox x:Name="PreStartCountdownViewbox" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Center"
-                         IsHitTestVisible="False" Visibility="Collapsed" Panel.ZIndex="10">
-                    <TextBlock x:Name="PreStartCountdownText" Text="3" FontSize="200" FontWeight="Bold" Foreground="#FF1E6FFF" TextAlignment="Center">
-                        <TextBlock.Effect>
-                            <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.7" Color="#FF042A66"/>
-                        </TextBlock.Effect>
-                    </TextBlock>
-                </Viewbox>
+                <Border x:Name="PreStartCountdownHost" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Panel.ZIndex="10"
+                        IsHitTestVisible="False" Background="#F0121A28" CornerRadius="28" Padding="36,8" BorderBrush="#FF1E6FFF" BorderThickness="3">
+                    <TextBlock x:Name="PreStartCountdownText" Text="3" FontSize="140" FontWeight="Bold" Foreground="#FF4DA3FF" TextAlignment="Center"/>
+                </Border>
             </Grid>
         </Border>
 

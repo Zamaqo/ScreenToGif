@@ -644,12 +644,12 @@ public partial class Recorder
     private void ShowPreStartCountdown(int seconds)
     {
         PreStartCountdownText.Text = seconds.ToString();
-        PreStartCountdownViewbox.Visibility = Visibility.Visible;
+        PreStartCountdownHost.Visibility = Visibility.Visible;
     }
 
     private void HidePreStartCountdown()
     {
-        PreStartCountdownViewbox.Visibility = Visibility.Collapsed;
+        PreStartCountdownHost.Visibility = Visibility.Collapsed;
     }
 
     private void PreStart_Elapsed(object sender, EventArgs e)

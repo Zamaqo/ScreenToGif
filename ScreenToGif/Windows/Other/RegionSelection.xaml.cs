@@ -92,15 +92,29 @@ public partial class RegionSelection : Window
         RenderOptions.SetEdgeMode(SelectionRectangle, EdgeMode.Unspecified);
     }
 
+    private bool _countdownForcedVisible;
+
     public void ShowCountdown(int seconds)
     {
+        if (Opacity == 0)
+        {
+            Opacity = 1;
+            _countdownForcedVisible = true;
+        }
+
         PreStartCountdownText.Text = seconds.ToString();
-        PreStartCountdownViewbox.Visibility = Visibility.Visible;
+        PreStartCountdownHost.Visibility = Visibility.Visible;
     }
 
     public void HideCountdown()
     {
-        PreStartCountdownViewbox.Visibility = Visibility.Collapsed;
+        PreStartCountdownHost.Visibility = Visibility.Collapsed;
+
+        if (_countdownForcedVisible)
+        {
+            Opacity = 0;
+            _countdownForcedVisible = false;
+        }
     }
 
 
