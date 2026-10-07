@@ -952,6 +952,15 @@
     <s:String x:Key="S.Editor.Home">Home</s:String>
     <s:String x:Key="S.Editor.Playback">Playback</s:String>
     <s:String x:Key="S.Editor.Edit">Edit</s:String>
+    <s:String x:Key="S.Editor.Custom">Custom</s:String>
+    <s:String x:Key="S.Editor.Custom.Customize">Customize</s:String>
+    <s:String x:Key="S.Editor.Custom.Title">Customize menu</s:String>
+    <s:String x:Key="S.Editor.Custom.Instruction">Add or remove icons. The list on the left is the order they appear on the menu.</s:String>
+    <s:String x:Key="S.Editor.Custom.Selected">On this menu</s:String>
+    <s:String x:Key="S.Editor.Custom.Available">Available icons</s:String>
+    <s:String x:Key="S.Editor.Custom.Remove">Remove</s:String>
+    <s:String x:Key="S.Editor.Custom.MoveUp">Move up</s:String>
+    <s:String x:Key="S.Editor.Custom.MoveDown">Move down</s:String>
     <s:String x:Key="S.Editor.Image">Image</s:String>
     <s:String x:Key="S.Editor.Transitions">Transitions</s:String>
     <s:String x:Key="S.Editor.Statistics">Statistics</s:String>

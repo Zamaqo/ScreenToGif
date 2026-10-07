@@ -94,3 +94,45 @@
 
 ----------------------------------
 
+► Title - 
+	Current domain unhandled exception - Unknown
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 13:21:15
+▬ Message - 
+	The Dispatcher is unable to request processing.  This is often because the application has starved the Dispatcher's message pump.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	WindowsBase
+▼ TargetSite - 
+	Void OnRequestProcessingFailure(System.String)
+♠ StackTrace - 
+   at System.Windows.Threading.Dispatcher.OnRequestProcessingFailure(String methodName)
+   at System.Windows.Threading.Dispatcher.RequestForegroundProcessing()
+   at System.Windows.Threading.Dispatcher.CriticalRequestProcessing(Boolean force)
+   at System.Windows.Threading.Dispatcher.InvokeAsyncImpl(DispatcherOperation operation, CancellationToken cancellationToken)
+   at System.Windows.Threading.Dispatcher.LegacyBeginInvokeImpl(DispatcherPriority priority, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndWrapper.Dispose(Boolean disposing, Boolean isHwndBeingDestroyed)
+   at MS.Win32.HwndWrapper.Finalize()
+   at System.GC.RunFinalizers()
+
+----------------------------------
+
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 13:22:19
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+

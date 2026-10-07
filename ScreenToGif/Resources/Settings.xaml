@@ -207,6 +207,13 @@
     <WindowState x:Key="EditorWindowState">Normal</WindowState>
     <e:PasteBehaviors x:Key="PasteBehavior">AfterSelected</e:PasteBehaviors>
     <s:Boolean x:Key="LoopedPlayback">True</s:Boolean>
+    <!--Editor • Custom ribbon. Ids match RibbonActionCatalog.-->
+    <c:ArrayList x:Key="CustomRibbonActions">
+        <s:String>Load</s:String>
+        <s:String>SaveAs</s:String>
+        <s:String>Play</s:String>
+        <s:String>NewRecording</s:String>
+    </c:ArrayList>
     
     <!--Editor • New Animation-->
     <Color x:Key="NewAnimationColor">#FFFFFFFF</Color>

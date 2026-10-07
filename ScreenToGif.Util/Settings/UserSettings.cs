@@ -1624,6 +1624,15 @@ public class UserSettings : INotifyPropertyChanged
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// Ordered ids of the buttons shown on the editor Custom tab.
+    /// </summary>
+    public ArrayList CustomRibbonActions
+    {
+        get => (ArrayList)GetValue();
+        set => SetValue(value);
+    }
+
     #endregion
 
     #region Editor • New Animation

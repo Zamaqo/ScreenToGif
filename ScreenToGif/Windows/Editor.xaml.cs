@@ -34,6 +34,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -231,8 +232,26 @@ namespace ScreenToGif.Windows
 
         #region Main Events
 
+        private void BuildCustomRibbon()
+        {
+            CustomRibbonPanel.Children.Clear();
+
+            foreach (var action in RibbonActionCatalog.GetSelected())
+                CustomRibbonPanel.Children.Add(RibbonActionCatalog.CreateButton(action));
+        }
+
+        private void CustomizeRibbon_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new CustomRibbonDialog { Owner = this };
+
+            if (dialog.ShowDialog() == true)
+                BuildCustomRibbon();
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            BuildCustomRibbon();
+
             SystemEvents.PowerModeChanged += System_PowerModeChanged;
             SystemEvents.DisplaySettingsChanged += System_DisplaySettingsChanged;
             SystemParameters.StaticPropertyChanged += SystemParameters_StaticPropertyChanged;
