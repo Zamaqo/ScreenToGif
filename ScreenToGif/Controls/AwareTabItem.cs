@@ -17,6 +17,8 @@ public class AwareTabItem : TabItem
 
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(Brush), typeof(AwareTabItem));
 
+    public static readonly DependencyProperty TabKeyProperty = DependencyProperty.Register(nameof(TabKey), typeof(string), typeof(AwareTabItem));
+
     #endregion
 
     #region Property accessors
@@ -49,6 +51,16 @@ public class AwareTabItem : TabItem
     {
         get => (Brush)GetValue(IconProperty);
         set => SetCurrentValue(IconProperty, value);
+    }
+
+    /// <summary>
+    /// Stable id used when the user reorders the editor tabs.
+    /// </summary>
+    [Description("Stable id used when the user reorders the editor tabs.")]
+    public string TabKey
+    {
+        get => (string)GetValue(TabKeyProperty);
+        set => SetCurrentValue(TabKeyProperty, value);
     }
 
     #endregion

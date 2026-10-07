@@ -1633,6 +1633,24 @@ public class UserSettings : INotifyPropertyChanged
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// When true, the editor opens with the Custom tab selected.
+    /// </summary>
+    public bool CustomRibbonIsDefaultMenu
+    {
+        get => (bool)GetValue();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Left-to-right order of the editor ribbon tabs, stored as TabKey values.
+    /// </summary>
+    public ArrayList EditorTabOrder
+    {
+        get => (ArrayList)GetValue();
+        set => SetValue(value);
+    }
+
     #endregion
 
     #region Editor • New Animation

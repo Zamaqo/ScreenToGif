@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using ScreenToGif.Domain.Enums;
 using ScreenToGif.Util;
 using ScreenToGif.Util.Settings;
@@ -19,12 +22,22 @@ public class HideableTabControl : TabControl
 {
     #region Variables
 
+    private const double TabHoldSlop = 6;
+
     private Button _hideButton;
     private ExtendedMenuItem _extrasMenuItem;
     private TabPanel _tabPanel;
     private Border _border;
     private ExtendedToggleButton _notificationButton;
     private NotificationBox _notificationBox;
+
+    private DispatcherTimer _tabHoldTimer;
+    private AwareTabItem _heldTab;
+    private Point _holdStart;
+    private bool _tabHoldReady;
+    private bool _reorderingTab;
+    private bool _tabOrderChanged;
+    private bool _endingTabHold;
 
     #endregion
 
@@ -104,6 +117,237 @@ public class HideableTabControl : TabControl
 
         UpdateVisual();
         AnimateOrNot();
+    }
+
+    /// <summary>
+    /// Restores the tab order saved from a previous drag.
+    /// </summary>
+    public void ApplySavedTabOrder()
+    {
+        var stored = UserSettings.All.EditorTabOrder;
+
+        if (stored == null || stored.Count == 0)
+            return;
+
+        var remaining = Items.OfType<AwareTabItem>().ToList();
+        var ordered = new List<AwareTabItem>();
+
+        foreach (var key in stored.OfType<string>())
+        {
+            var tab = remaining.FirstOrDefault(item => item.TabKey == key);
+
+            if (tab == null)
+                continue;
+
+            ordered.Add(tab);
+            remaining.Remove(tab);
+        }
+
+        ordered.AddRange(remaining);
+
+        var currentKeys = Items.OfType<AwareTabItem>().Select(tab => tab.TabKey).ToList();
+
+        if (currentKeys.SequenceEqual(ordered.Select(tab => tab.TabKey)))
+            return;
+
+        var selected = SelectedItem;
+
+        foreach (var tab in ordered)
+            Items.Remove(tab);
+
+        foreach (var tab in ordered)
+            Items.Add(tab);
+
+        if (selected != null)
+            SelectedItem = selected;
+    }
+
+    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+    {
+        base.OnPreviewMouseLeftButtonDown(e);
+        BeginTabHold(e);
+    }
+
+    protected override void OnPreviewMouseMove(MouseEventArgs e)
+    {
+        base.OnPreviewMouseMove(e);
+
+        if (_heldTab == null || e.LeftButton != MouseButtonState.Pressed || _tabPanel == null)
+            return;
+
+        if (!_tabHoldReady)
+        {
+            var moved = e.GetPosition(this);
+
+            if (Math.Abs(moved.X - _holdStart.X) > TabHoldSlop || Math.Abs(moved.Y - _holdStart.Y) > TabHoldSlop)
+                CancelTabHold();
+
+            return;
+        }
+
+        _reorderingTab = true;
+        Mouse.OverrideCursor = Cursors.SizeAll;
+        _heldTab.Opacity = 0.65;
+
+        if (!IsMouseCaptured)
+            CaptureMouse();
+
+        if (MoveHeldTab(e.GetPosition(_tabPanel)))
+            _tabOrderChanged = true;
+
+        e.Handled = true;
+    }
+
+    protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
+    {
+        FinishTabHold();
+        base.OnPreviewMouseLeftButtonUp(e);
+    }
+
+    private void BeginTabHold(MouseButtonEventArgs e)
+    {
+        CancelTabHold();
+
+        if (FindParent<AwareTabItem>(e.OriginalSource as DependencyObject) is not AwareTabItem tab || !Items.Contains(tab))
+            return;
+
+        _heldTab = tab;
+        _holdStart = e.GetPosition(this);
+        _tabHoldReady = false;
+        _reorderingTab = false;
+        _tabOrderChanged = false;
+
+        _tabHoldTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+        _tabHoldTimer.Tick += TabHoldTimer_Tick;
+        _tabHoldTimer.Start();
+    }
+
+    private void TabHoldTimer_Tick(object sender, EventArgs e)
+    {
+        _tabHoldTimer?.Stop();
+
+        if (_heldTab == null || Mouse.LeftButton != MouseButtonState.Pressed)
+        {
+            CancelTabHold();
+            return;
+        }
+
+        _tabHoldReady = true;
+    }
+
+    private bool MoveHeldTab(Point positionInPanel)
+    {
+        var dropIndex = GetDropIndex(positionInPanel);
+        var currentIndex = Items.IndexOf(_heldTab);
+
+        if (currentIndex < 0 || dropIndex == currentIndex || dropIndex == currentIndex + 1)
+            return false;
+
+        Items.Remove(_heldTab);
+
+        if (dropIndex > currentIndex)
+            dropIndex--;
+
+        if (dropIndex < 0)
+            dropIndex = 0;
+
+        if (dropIndex > Items.Count)
+            dropIndex = Items.Count;
+
+        Items.Insert(dropIndex, _heldTab);
+        _heldTab.IsSelected = true;
+        return true;
+    }
+
+    private int GetDropIndex(Point positionInPanel)
+    {
+        var tabs = _tabPanel.Children.OfType<TabItem>().ToList();
+
+        for (var i = 0; i < tabs.Count; i++)
+        {
+            var tab = tabs[i];
+            var left = tab.TranslatePoint(new Point(0, 0), _tabPanel).X;
+
+            if (positionInPanel.X < left + tab.ActualWidth / 2)
+                return Items.IndexOf(tab);
+        }
+
+        return Items.Count;
+    }
+
+    private void FinishTabHold()
+    {
+        if (_endingTabHold)
+            return;
+
+        _endingTabHold = true;
+
+        try
+        {
+            var changed = _tabOrderChanged;
+            CancelTabHold();
+
+            if (changed)
+                SaveTabOrder();
+        }
+        finally
+        {
+            _endingTabHold = false;
+        }
+    }
+
+    protected override void OnLostMouseCapture(MouseEventArgs e)
+    {
+        base.OnLostMouseCapture(e);
+
+        if (_reorderingTab)
+            FinishTabHold();
+    }
+
+    private void CancelTabHold()
+    {
+        if (_tabHoldTimer != null)
+        {
+            _tabHoldTimer.Stop();
+            _tabHoldTimer.Tick -= TabHoldTimer_Tick;
+            _tabHoldTimer = null;
+        }
+
+        if (_heldTab != null)
+            _heldTab.Opacity = 1;
+
+        if (_reorderingTab)
+            Mouse.OverrideCursor = null;
+
+        if (IsMouseCaptured)
+            ReleaseMouseCapture();
+
+        _heldTab = null;
+        _tabHoldReady = false;
+        _reorderingTab = false;
+        _tabOrderChanged = false;
+    }
+
+    private void SaveTabOrder()
+    {
+        var list = new ArrayList();
+
+        foreach (var tab in Items.OfType<AwareTabItem>())
+        {
+            if (!string.IsNullOrWhiteSpace(tab.TabKey))
+                list.Add(tab.TabKey);
+        }
+
+        UserSettings.All.EditorTabOrder = list;
+        UserSettings.Save();
+    }
+
+    private static T FindParent<T>(DependencyObject source) where T : DependencyObject
+    {
+        while (source != null && source is not T)
+            source = VisualTreeHelper.GetParent(source);
+
+        return source as T;
     }
 
     #region Events

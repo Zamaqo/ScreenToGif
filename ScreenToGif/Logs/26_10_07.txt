@@ -136,3 +136,21 @@
 
 ----------------------------------
 
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 13:39:41
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+

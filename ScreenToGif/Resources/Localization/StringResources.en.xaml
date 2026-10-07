@@ -961,6 +961,8 @@
     <s:String x:Key="S.Editor.Custom.Remove">Remove</s:String>
     <s:String x:Key="S.Editor.Custom.MoveUp">Move up</s:String>
     <s:String x:Key="S.Editor.Custom.MoveDown">Move down</s:String>
+    <s:String x:Key="S.Editor.Custom.DefaultMenu">Default menu</s:String>
+    <s:String x:Key="S.Editor.Custom.DefaultMenu.Info">Open the Custom menu when the editor opens.</s:String>
     <s:String x:Key="S.Editor.Image">Image</s:String>
     <s:String x:Key="S.Editor.Transitions">Transitions</s:String>
     <s:String x:Key="S.Editor.Statistics">Statistics</s:String>

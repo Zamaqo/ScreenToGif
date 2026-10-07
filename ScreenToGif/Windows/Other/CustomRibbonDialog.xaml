@@ -68,6 +68,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <n:ExtendedCheckBox Grid.Column="0" x:Name="DefaultMenuCheckBox" Margin="12,0,0,0" VerticalAlignment="Center"
+                                Text="{DynamicResource S.Editor.Custom.DefaultMenu}"
+                                ToolTip="{DynamicResource S.Editor.Custom.DefaultMenu.Info}" IsChecked="True"/>
+
             <n:ExtendedButton Grid.Column="1" x:Name="OkButton" Text="{DynamicResource S.Ok}" Icon="{StaticResource Vector.Ok}"
                               ContentWidth="18" ContentHeight="18" Padding="5,0" MinWidth="90" Margin="5" Click="OkButton_Click"/>
 

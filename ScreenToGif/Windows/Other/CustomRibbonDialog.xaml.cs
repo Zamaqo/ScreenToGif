@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using ScreenToGif.Util;
+using ScreenToGif.Util.Settings;
 
 namespace ScreenToGif.Windows.Other;
 
@@ -29,6 +30,7 @@ public partial class CustomRibbonDialog
 
         SelectedList.ItemsSource = _selected;
         AvailableList.ItemsSource = _available;
+        DefaultMenuCheckBox.IsChecked = UserSettings.All.CustomRibbonIsDefaultMenu;
         UpdateButtons();
     }
 
@@ -98,6 +100,7 @@ public partial class CustomRibbonDialog
 
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
+        UserSettings.All.CustomRibbonIsDefaultMenu = DefaultMenuCheckBox.IsChecked == true;
         RibbonActionCatalog.Save(_selected);
         DialogResult = true;
     }

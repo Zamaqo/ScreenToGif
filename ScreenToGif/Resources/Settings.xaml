@@ -214,6 +214,17 @@
         <s:String>Play</s:String>
         <s:String>NewRecording</s:String>
     </c:ArrayList>
+    <s:Boolean x:Key="CustomRibbonIsDefaultMenu">True</s:Boolean>
+    <c:ArrayList x:Key="EditorTabOrder">
+        <s:String>File</s:String>
+        <s:String>Playback</s:String>
+        <s:String>Edit</s:String>
+        <s:String>Home</s:String>
+        <s:String>Image</s:String>
+        <s:String>Transitions</s:String>
+        <s:String>Statistics</s:String>
+        <s:String>Custom</s:String>
+    </c:ArrayList>
     
     <!--Editor • New Animation-->
     <Color x:Key="NewAnimationColor">#FFFFFFFF</Color>

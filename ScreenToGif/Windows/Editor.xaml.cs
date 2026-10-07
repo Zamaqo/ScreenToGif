@@ -227,6 +227,11 @@ namespace ScreenToGif.Windows
         {
             InitializeComponent();
 
+            RibbonTabControl.ApplySavedTabOrder();
+
+            if (UserSettings.All.CustomRibbonIsDefaultMenu)
+                CustomTab.IsSelected = true;
+
             _viewModel = DataContext as EditorViewModel;
         }
 
@@ -297,7 +302,8 @@ namespace ScreenToGif.Windows
             LoadFromArguments();
             Arguments.ClearAutomationArgs();
 
-            RibbonTabControl.SelectedIndex = 0;
+            if (!UserSettings.All.CustomRibbonIsDefaultMenu)
+                RibbonTabControl.SelectedIndex = 0;
 
             WelcomeTextBlock.Text = LocalizationHelper.Get(Humanizer.WelcomeInfo());
             SymbolTextBlock.Text = Humanizer.Welcome();
