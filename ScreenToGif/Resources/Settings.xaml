@@ -63,11 +63,11 @@
     <s:Boolean x:Key="InstallUpdates">True</s:Boolean>
     <s:Boolean x:Key="PromptToInstall">True</s:Boolean>
     <s:Boolean x:Key="ShowNotificationIcon">True</s:Boolean>
-    <s:Boolean x:Key="KeepOpen">False</s:Boolean>
+    <s:Boolean x:Key="KeepOpen">True</s:Boolean>
     <s:Int32 x:Key="LeftClickAction">2</s:Int32>
-    <s:Int32 x:Key="LeftOpenWindow">1</s:Int32>
+    <s:Int32 x:Key="LeftOpenWindow">2</s:Int32>
     <s:Int32 x:Key="DoubleLeftClickAction">1</s:Int32>
-    <s:Int32 x:Key="DoubleLeftOpenWindow">2</s:Int32>
+    <s:Int32 x:Key="DoubleLeftOpenWindow">5</s:Int32>
     <s:Int32 x:Key="MiddleClickAction">3</s:Int32>
     <s:Int32 x:Key="MiddleOpenWindow">0</s:Int32>
     <s:Boolean x:Key="WorkaroundQuota">True</s:Boolean>
@@ -96,7 +96,7 @@
     <i:CompressionLevel x:Key="CaptureCompression">Optimal</i:CompressionLevel>
     <s:Int32 x:Key="MemoryCacheSize">250</s:Int32>
     <s:Boolean x:Key="PreventBlackFrames">True</s:Boolean>
-    <e:AppThemes x:Key="MainTheme">Light</e:AppThemes>
+    <e:AppThemes x:Key="MainTheme">Dark</e:AppThemes>
     <Color x:Key="RecorderBackground">#FFFFFFFF</Color>
     <Color x:Key="RecorderForeground">#FF000000</Color>
     <Rect x:Key="BoardGridSize">0,0,20,20</Rect>
