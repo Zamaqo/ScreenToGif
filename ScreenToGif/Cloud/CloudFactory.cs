@@ -14,6 +14,8 @@ public class CloudFactory
                 return new Imgur();
             case UploadDestinations.Yandex:
                 return new YandexDisk();
+            case UploadDestinations.CloudflareR2:
+                return new CloudflareR2();
         }
 
         throw new NotImplementedException();

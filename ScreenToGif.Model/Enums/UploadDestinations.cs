@@ -9,5 +9,6 @@ public enum UploadDestinations
     Imgur,
     Yandex = 3,
     YouTrack,
-    Custom
+    Custom,
+    CloudflareR2
 }

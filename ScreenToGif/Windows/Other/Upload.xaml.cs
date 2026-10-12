@@ -6,6 +6,7 @@ using ScreenToGif.Domain.Interfaces;
 using ScreenToGif.UserControls;
 using ScreenToGif.Util;
 using ScreenToGif.ViewModel.UploadPresets;
+using ScreenToGif.ViewModel.UploadPresets.Cloudflare;
 using ScreenToGif.ViewModel.UploadPresets.Imgur;
 using ScreenToGif.ViewModel.UploadPresets.Yandex;
 
@@ -30,7 +31,7 @@ public partial class Upload
         {
             MainBorder.Background = TryFindResource("Vector.Pen") as Brush;
             TypeTextBlock.Text = LocalizationHelper.Get("S.Edit");
-            TypeComboBox.SelectedIndex = (int)(CurrentPreset?.Type ?? UploadDestinations.NotDefined);
+            SelectService(CurrentPreset?.Type ?? UploadDestinations.NotDefined);
             TypeComboBox.IsEnabled = false;
             EnabledCheckBox.Visibility = Visibility.Visible;
 
@@ -43,8 +44,11 @@ public partial class Upload
             {
                 FilterRun.Text = $"\n(*.{Type.ToString().ToLower()})";
 
-                if (!ImgurPresetItem.AllowedTypes.Contains(Type.Value))
-                    TypeComboBox.Items.Remove(ImgurPresetItem);
+                for (var index = TypeComboBox.Items.Count - 1; index >= 0; index--)
+                {
+                    if (TypeComboBox.Items[index] is UploadPreset item && item.AllowedTypes is { Count: > 0 } && !item.AllowedTypes.Contains(Type.Value))
+                        TypeComboBox.Items.RemoveAt(index);
+                }
             }
 
             TypeComboBox.Focus();
@@ -56,7 +60,7 @@ public partial class Upload
         if (!IsLoaded)
             return;
 
-        if (TypeComboBox.SelectedIndex < 1)
+        if (TypeComboBox.SelectedItem is not UploadPreset selected || selected.Type == UploadDestinations.NotDefined)
         {
             MainPresenter.Content = null;
             return;
@@ -64,8 +68,8 @@ public partial class Upload
 
         if (!IsEditing)
         {
-            //Create a new model.
-            switch ((UploadDestinations)TypeComboBox.SelectedIndex)
+            //Create a new model. The combo item is only a template, so edits must not change it.
+            switch (selected.Type)
             {
                 case UploadDestinations.Imgur:
                     CurrentPreset = new ImgurPreset();
@@ -73,10 +77,13 @@ public partial class Upload
                 case UploadDestinations.Yandex:
                     CurrentPreset = new YandexPreset();
                     break;
+                case UploadDestinations.CloudflareR2:
+                    CurrentPreset = new CloudflareR2Preset();
+                    break;
             }
         }
 
-        switch ((UploadDestinations)TypeComboBox.SelectedIndex)
+        switch (selected.Type)
         {
             case UploadDestinations.Imgur:
                 MainPresenter.Content = new ImgurPanel { DataContext = CurrentPreset };
@@ -84,12 +91,27 @@ public partial class Upload
             case UploadDestinations.Yandex:
                 MainPresenter.Content = new YandexPanel { DataContext = CurrentPreset };
                 break;
+            case UploadDestinations.CloudflareR2:
+                MainPresenter.Content = new CloudflareR2Panel { DataContext = CurrentPreset };
+                break;
+        }
+    }
+
+    private void SelectService(UploadDestinations type)
+    {
+        foreach (var item in TypeComboBox.Items)
+        {
+            if (item is UploadPreset preset && preset.Type == type)
+            {
+                TypeComboBox.SelectedItem = item;
+                return;
+            }
         }
     }
 
     private void Ok_CanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
-        e.CanExecute = IsLoaded && TypeComboBox.SelectedIndex > 0;
+        e.CanExecute = IsLoaded && TypeComboBox.SelectedItem is UploadPreset preset && preset.Type != UploadDestinations.NotDefined;
     }
 
     private async void Ok_Executed(object sender, RoutedEventArgs e)

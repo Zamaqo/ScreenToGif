@@ -1,0 +1,117 @@
+<UserControl x:Class="ScreenToGif.UserControls.CloudflareR2Panel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:n="clr-namespace:ScreenToGif.Controls"
+             mc:Ignorable="d" d:DesignHeight="640" d:DesignWidth="440"
+             x:Name="ThisPanel" Loaded="CloudflareR2Panel_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <n:StatusBand Grid.Row="0" x:Name="StatusBand"/>
+
+        <Expander Grid.Row="1" Header="{DynamicResource S.Options.Upload.Preset.Details}" IsExpanded="True">
+            <Grid Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.Name}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="0" Grid.Column="1" x:Name="NameTextBox" Text="{Binding Title}" Margin="5,3" MaxLength="50" IsObligatory="True"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.Description}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description}" MinHeight="23" Margin="5,3" VerticalContentAlignment="Top" TextWrapping="Wrap" MaxLength="100"/>
+            </Grid>
+        </Expander>
+
+        <Expander Grid.Row="2" Header="{DynamicResource S.Options.Upload.Preset.Authorization}" IsExpanded="True">
+            <Grid Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Hyperlink NavigateUri="https://developers.cloudflare.com/r2/api/s3/tokens/" RequestNavigate="TokenHyperlink_RequestNavigate">
+                        <Run Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.CreateToken}"/>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Account}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="1" Grid.Column="1" x:Name="AccountTextBox" Text="{Binding AccountId}" Margin="5,3" IsObligatory="True"
+                                   Watermark="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Account.Watermark}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.AccessKey}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="2" Grid.Column="1" x:Name="AccessKeyTextBox" Text="{Binding AccessKeyId}" Margin="5,3" IsObligatory="True"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.SecretKey}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <PasswordBox Grid.Row="3" Grid.Column="1" x:Name="SecretKeyBox" Margin="5,3" VerticalContentAlignment="Center"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,3,5,6" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Stored}"
+                           TextWrapping="Wrap" Foreground="{DynamicResource Element.Foreground.Gray150}"/>
+            </Grid>
+        </Expander>
+
+        <Expander Grid.Row="3" Header="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Destination}" IsExpanded="True">
+            <Grid Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Bucket}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="0" Grid.Column="1" x:Name="BucketTextBox" Text="{Binding Bucket}" Margin="5,3" IsObligatory="True"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Folder}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="1" Grid.Column="1" Text="{Binding Prefix}" Margin="5,3"
+                                   Watermark="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Folder.Watermark}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.PublicUrl}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                <n:ExtendedTextBox Grid.Row="2" Grid.Column="1" x:Name="PublicUrlTextBox" Text="{Binding PublicBaseUrl}" Margin="5,3" IsObligatory="True"
+                                   Watermark="{DynamicResource S.Options.Upload.Preset.CloudflareR2.PublicUrl.Watermark}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,3,5,6" Text="{DynamicResource S.Options.Upload.Preset.CloudflareR2.PublicUrl.Info}"
+                           TextWrapping="Wrap" Foreground="{DynamicResource Element.Foreground.Gray150}"/>
+
+                <n:SplitButton Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TestSplitButton" HorizontalAlignment="Left" Margin="5,0,5,8"
+                               ContentWidth="16" ContentHeight="16" Padding="6,2">
+                    <n:ExtendedMenuItem Header="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Test}" Tag="I" IsHitTestVisible="False"
+                                        Icon="{StaticResource Vector.Ok}" ContentHeight="16" ContentWidth="16"/>
+                    <Separator Height="1" Margin="3,2"/>
+                    <n:ExtendedMenuItem Header="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Test.Upload}" Tag="S.Options.Upload.Preset.CloudflareR2.Test.Upload"
+                                        Icon="{StaticResource Vector.Add}" ContentHeight="16" ContentWidth="16" Click="UploadSample_Click"/>
+                    <n:ExtendedMenuItem Header="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Test.Edit}" Tag="S.Options.Upload.Preset.CloudflareR2.Test.Edit"
+                                        Icon="{StaticResource Vector.Pen}" ContentHeight="16" ContentWidth="16" Click="EditSample_Click"/>
+                    <n:ExtendedMenuItem Header="{DynamicResource S.Options.Upload.Preset.CloudflareR2.Test.Delete}" Tag="S.Options.Upload.Preset.CloudflareR2.Test.Delete"
+                                        Icon="{StaticResource Vector.Remove}" ContentHeight="16" ContentWidth="16" Click="DeleteSample_Click"/>
+                </n:SplitButton>
+            </Grid>
+        </Expander>
+    </Grid>
+</UserControl>

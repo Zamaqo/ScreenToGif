@@ -154,3 +154,105 @@
 
 ----------------------------------
 
+► Title - 
+	It was not possible to access the webcam feed.
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 13:58:57
+▬ Message - 
+	0x80040217
+○ Type - 
+	System.Runtime.InteropServices.COMException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Void ThrowExceptionForHR(Int32)
+♠ StackTrace - 
+   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Int32 errorCode)
+   at ScreenToGif.Webcam.DirectX.CaptureWebcam.RenderGraph() in C:\buildslocal\ScreenToGif\ScreenToGif\Webcam\DirectX\CaptureWebcam.cs:line 478
+   at ScreenToGif.Webcam.DirectX.CaptureWebcam.StartPreview() in C:\buildslocal\ScreenToGif\ScreenToGif\Webcam\DirectX\CaptureWebcam.cs:line 201
+   at ScreenToGif.Controls.WebcamControl.Refresh() in C:\buildslocal\ScreenToGif\ScreenToGif\Controls\WebcamControl.xaml.cs:line 70
+
+----------------------------------
+
+► Title - 
+	It was not possible to access the webcam feed.
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 13:59:15
+▬ Message - 
+	0x80040217
+○ Type - 
+	System.Runtime.InteropServices.COMException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Void ThrowExceptionForHR(Int32)
+♠ StackTrace - 
+   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Int32 errorCode)
+   at ScreenToGif.Webcam.DirectX.CaptureWebcam.RenderGraph() in C:\buildslocal\ScreenToGif\ScreenToGif\Webcam\DirectX\CaptureWebcam.cs:line 478
+   at ScreenToGif.Webcam.DirectX.CaptureWebcam.StartPreview() in C:\buildslocal\ScreenToGif\ScreenToGif\Webcam\DirectX\CaptureWebcam.cs:line 201
+   at ScreenToGif.Controls.WebcamControl.Refresh() in C:\buildslocal\ScreenToGif\ScreenToGif\Controls\WebcamControl.xaml.cs:line 70
+
+----------------------------------
+
+► Title - 
+	On dispatcher unhandled exception - Unknown
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 14:01:29
+▬ Message - 
+	DialogResult can be set only after Window is created and shown as dialog.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	PresentationFramework
+▼ TargetSite - 
+	Void set_DialogResult(System.Nullable`1[System.Boolean])
+♠ StackTrace - 
+   at System.Windows.Window.set_DialogResult(Nullable`1 value)
+   at ScreenToGif.Windows.Other.VideoSource.CancelButton_Click(Object sender, RoutedEventArgs e) in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Other\VideoSource.xaml.cs:line 113
+   at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_0(Object state)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+
+----------------------------------
+
+► Title - 
+	On dispatcher unhandled exception - Unknown
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 14:01:55
+▬ Message - 
+	DialogResult can be set only after Window is created and shown as dialog.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	PresentationFramework
+▼ TargetSite - 
+	Void set_DialogResult(System.Nullable`1[System.Boolean])
+♠ StackTrace - 
+   at System.Windows.Window.set_DialogResult(Nullable`1 value)
+   at ScreenToGif.Windows.Other.VideoSource.CancelButton_Click(Object sender, RoutedEventArgs e) in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Other\VideoSource.xaml.cs:line 113
+   at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_0(Object state)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+
+----------------------------------
+
+► Title - 
+	It was not possible to unregister the IPC server.
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/07/2026 14:21:34
+▬ Message - 
+	Pipe hasn't been connected yet.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	System.IO.Pipes
+▼ TargetSite - 
+	Void CheckDisconnectOperations()
+♠ StackTrace - 
+   at System.IO.Pipes.NamedPipeServerStream.CheckDisconnectOperations()
+   at System.IO.Pipes.NamedPipeServerStream.Disconnect()
+   at ScreenToGif.Util.InterProcessChannel.PipeServer`1.Stop() in C:\buildslocal\ScreenToGif\ScreenToGif.Util\InterProcessChannel\PipeServer.cs:line 31
+   at ScreenToGif.Util.InterProcessChannel.InstanceSwitcherChannel.UnregisterServer() in C:\buildslocal\ScreenToGif\ScreenToGif.Util\InterProcessChannel\InstanceSwitcherChannel.cs:line 45
+
+----------------------------------
+

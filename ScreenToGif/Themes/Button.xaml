@@ -1130,9 +1130,9 @@
 
     <!--SplitButton • Border • Text-->
     <Style TargetType="{x:Type n:SplitButton}">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="#FFABABAB"/>
-        <Setter Property="Foreground" Value="#FF444444"/>
+        <Setter Property="Background" Value="{DynamicResource Brush.Button.Background}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Button.Border}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Element.Foreground}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -1159,14 +1159,14 @@
                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Command="{TemplateBinding Command}" CommandParameter="{TemplateBinding CommandParameter}"/>
 
-                            <Separator Grid.Column="1" x:Name="Separator" BorderBrush="#FFA3BDE3" Width="1" Margin="0" Visibility="Hidden"/>
+                            <Separator Grid.Column="1" x:Name="Separator" BorderBrush="{DynamicResource Element.Border}" Width="1" Margin="0" Visibility="Hidden"/>
 
                             <n:ExtendedToggleButton Grid.Column="2" x:Name="ExpanderButton" Style="{DynamicResource Style.ToggleButton.NoText}" Icon="{DynamicResource Vector.Arrow.Blue.Bottom}" 
                                                     ContentWidth="5" ContentHeight="3"/>
 
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{Binding ElementName=ExpanderButton, Path=IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                    AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade" HorizontalOffset="-2">
-                                <Border Name="SubmenuBorder" SnapsToDevicePixels="True" Background="White" BorderBrush="#FFBEBEBE" BorderThickness="1" Effect="{DynamicResource Shadow.Border.Small}" Margin="2">
+                                <Border Name="SubmenuBorder" SnapsToDevicePixels="True" Background="{DynamicResource Element.Background}" BorderBrush="{DynamicResource Element.Border}" BorderThickness="1" Effect="{DynamicResource Shadow.Border.Small}" Margin="2" CornerRadius="4">
                                     <StackPanel x:Name="InnerStackPanel" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
                                 </Border>
                             </Popup>
@@ -1190,8 +1190,6 @@
                         </Trigger>
 
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#FFE6E6E6"/>
-                            <Setter Property="BorderBrush" Value="#FFBCBCBC"/>
                             <Setter Property="Opacity" Value="0.7"/>
                         </Trigger>
 

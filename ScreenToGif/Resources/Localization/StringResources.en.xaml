@@ -576,6 +576,38 @@
     <s:String x:Key="S.Options.Upload.Preset.Gfycat.Defaults">Defaults</s:String>
     <s:String x:Key="S.Options.Upload.Preset.Gfycat.AskMe">Ask me to fill out the details of the upload.</s:String>
     <s:String x:Key="S.Options.Upload.Preset.Gfycat.UrlType">Url type:</s:String>
+
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.CreateToken">Create an R2 API token</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Account">S3 endpoint:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Account.Watermark">https://&lt;account-id&gt;.r2.cloudflarestorage.com</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.AccessKey">Access key:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.SecretKey">Secret key:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Stored">The access key and secret are saved in your ScreenToGif settings and used for later uploads.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Destination">Destination</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Bucket">Bucket:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Folder">Folder:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Folder.Watermark">Optional, for example recordings</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.PublicUrl">Public URL:</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.PublicUrl.Watermark">https://media.example.com</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.PublicUrl.Info">This address is copied after upload. Use the bucket's public r2.dev subdomain or a custom domain. Uploading a file with the same name replaces the object already in the bucket.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.Account">Paste the https S3 endpoint from Cloudflare.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test">Test</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Upload">Upload sample</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Edit">Edit sample</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Delete">Delete sample</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Uploading">Uploading a test image...</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Reading">Reading the test image back...</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Public">Opening the public link...</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Replacing">Replacing the test image...</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Deleting">Deleting the test image...</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Upload.Success">Uploaded {0}. Click this message to open it.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Edit.Success">Replaced {0} with a blue image. Click this message to open it.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.CloudflareR2.Test.Delete.Success">Deleted {0}.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.AccessKey">Enter the R2 access key ID.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.SecretKey">Enter the R2 secret access key.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.Bucket">Enter a bucket name without spaces or slashes.</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.Folder">The folder cannot contain "." or "..".</s:String>
+    <s:String x:Key="S.Options.Upload.Preset.Warning.CloudflareR2.PublicUrl">Enter the public URL for this bucket (an http or https address).</s:String>
     
     <!--Options • Upload > Album-->
     <s:String x:Key="S.Options.Upload.Pick.Album">Pick an album (optional)</s:String>

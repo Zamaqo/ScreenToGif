@@ -5,6 +5,7 @@ using ScreenToGif.Cloud;
 using ScreenToGif.Domain.Enums;
 using ScreenToGif.Util.Settings;
 using ScreenToGif.ViewModel.UploadPresets;
+using ScreenToGif.ViewModel.UploadPresets.Cloudflare;
 using ScreenToGif.ViewModel.UploadPresets.Imgur;
 using ScreenToGif.ViewModel.UploadPresets.Yandex;
 using ScreenToGif.Windows;
@@ -33,6 +34,9 @@ internal static class PresetExtensions
 
             case YandexPreset yandex:
                 return await IsValid(yandex);
+
+            case CloudflareR2Preset cloudflareR2:
+                return await IsValid(cloudflareR2);
         }
 
         return await preset.IsValid();
@@ -49,6 +53,14 @@ internal static class PresetExtensions
     public static async Task<ValidatedEventArgs> IsValid(YandexPreset preset)
     {
         if (!preset.IsAnonymous && !YandexDisk.IsAuthorized(preset))
+            return new ValidatedEventArgs("S.SaveAs.Warning.Upload.NotAuthorized", StatusReasons.UploadServiceUnauthorized, () => App.MainViewModel.OpenOptions.Execute(Options.UploadIndex));
+
+        return await preset.IsValid();
+    }
+
+    public static async Task<ValidatedEventArgs> IsValid(CloudflareR2Preset preset)
+    {
+        if (!CloudflareR2.IsAuthorized(preset))
             return new ValidatedEventArgs("S.SaveAs.Warning.Upload.NotAuthorized", StatusReasons.UploadServiceUnauthorized, () => App.MainViewModel.OpenOptions.Execute(Options.UploadIndex));
 
         return await preset.IsValid();

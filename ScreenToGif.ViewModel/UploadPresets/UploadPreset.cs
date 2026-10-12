@@ -106,6 +106,8 @@ public class UploadPreset : BindableBase, IUploadPreset
                     return "Imgur";
                 case UploadDestinations.Yandex:
                     return "Yandex";
+                case UploadDestinations.CloudflareR2:
+                    return "Cloudflare R2";
                 case UploadDestinations.Custom:
                     return LocalizationHelper.Get("S.Options.Upload.Preset.Custom");
                 default:

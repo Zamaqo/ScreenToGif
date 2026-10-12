@@ -7,7 +7,8 @@
             xmlns:p="clr-namespace:ScreenToGif.ViewModel.UploadPresets;assembly=ScreenToGif.ViewModel"
             xmlns:i="clr-namespace:ScreenToGif.ViewModel.UploadPresets.Imgur;assembly=ScreenToGif.ViewModel"
             xmlns:y="clr-namespace:ScreenToGif.ViewModel.UploadPresets.Yandex;assembly=ScreenToGif.ViewModel"
-            Title="{DynamicResource S.Options.Upload.Preset.Title}" Width="400" Height="500" MinWidth="380" MinHeight="300"
+            xmlns:r2="clr-namespace:ScreenToGif.ViewModel.UploadPresets.Cloudflare;assembly=ScreenToGif.ViewModel"
+            Title="{DynamicResource S.Options.Upload.Preset.Title}" Width="480" Height="640" MinWidth="420" MinHeight="360"
             WindowStartupLocation="CenterScreen" SnapsToDevicePixels="True" Icon="/ScreenToGif;component/Resources/Logo.ico"
             Loaded="Window_Loaded">
 
@@ -89,6 +90,7 @@
                 <p:UploadPreset ImageId="Vector.Info"/>
                 <i:ImgurPreset x:Name="ImgurPresetItem" ImageId="Vector.Imgur"/>
                 <y:YandexPreset x:Name="YandexPresetItem" ImageId="Vector.YandexDisk"/>
+                <r2:CloudflareR2Preset x:Name="CloudflareR2PresetItem" ImageId="Vector.CloudflareR2"/>
             </ComboBox>
         </Grid>
 

@@ -2088,6 +2088,15 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
+    <DrawingBrush x:Key="Vector.CloudflareR2" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#FFF38020" Geometry="F1 M 20,5.5 C 15.2,5.5 11.2,8.6 9.8,13 C 6.2,13.4 3.4,16.4 3.4,20.1 C 3.4,24.2 6.7,27.5 10.8,27.5 L 30.2,27.5 C 34.6,27.5 38.2,23.9 38.2,19.5 C 38.2,15.4 35.1,12 31,11.6 C 29.4,8.1 25,5.5 20,5.5 Z"/>
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 16.2,18.2 L 19.2,18.2 L 19.2,14.2 L 21.4,14.2 L 21.4,18.2 L 24.4,18.2 L 20.3,23.2 Z"/>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
     <DrawingBrush x:Key="Vector.YandexDisk" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center">
         <DrawingBrush.Drawing>
             <DrawingGroup>
