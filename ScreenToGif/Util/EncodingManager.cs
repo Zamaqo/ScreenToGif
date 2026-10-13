@@ -492,9 +492,19 @@ internal class EncodingManager
         {
             #region File naming
 
-            if (preset.PickLocation)
+            if (preset.PickLocation && preset.OutputDestination != OutputDestinations.Cloud)
             {
                 preset.FullPath = Path.Combine(preset.OutputFolder, preset.ResolvedFilename + (preset.Extension ?? preset.DefaultExtension));
+            }
+            else if (preset.OutputDestination == OutputDestinations.Cloud)
+            {
+                //Keep the chosen filename so the uploaded object uses it, without writing into the user's folder.
+                var folder = Path.Combine(Path.GetTempPath(), "ScreenToGif", "Cloud", Guid.NewGuid().ToString("N"));
+                Directory.CreateDirectory(folder);
+
+                var extension = preset.Extension ?? preset.DefaultExtension ?? "";
+                var name = (string.IsNullOrWhiteSpace(preset.ResolvedFilename) ? preset.OutputFilename : preset.ResolvedFilename) + extension;
+                preset.FullPath = Path.Combine(folder, name);
             }
             else
             {
@@ -1140,13 +1150,17 @@ internal class EncodingManager
                 if (File.Exists(preset.FullPath))
                     File.Delete(preset.FullPath);
 
+                DeleteCloudCopy(preset);
+
                 Update(id, EncodingStatus.Canceled);
                 return;
             }
 
             #region Upload
 
-            if (preset.UploadFile && File.Exists(preset.FullPath))
+            var uploadedToCloud = false;
+
+            if ((preset.UploadFile || preset.OutputDestination == OutputDestinations.Cloud) && File.Exists(preset.FullPath))
             {
                 Update(id, "S.Encoder.Uploading", true, true);
 
@@ -1154,7 +1168,7 @@ internal class EncodingManager
                 {
                     //Get selected preset.
                     var presetType = preset.Extension == ".zip" ? ExportFormats.Zip : preset.Type;
-                    var uploadPreset = UserSettings.All.UploadPresets.OfType<UploadPreset>().FirstOrDefault(f => (f.AllowedTypes.Count == 0 || f.AllowedTypes.Contains(presetType)) && f.Title == preset.UploadService);
+                    var uploadPreset = UserSettings.All.UploadPresets.OfType<UploadPreset>().FirstOrDefault(f => f.IsEnabled && (f.AllowedTypes.Count == 0 || f.AllowedTypes.Contains(presetType)) && f.Title == preset.UploadService);
 
                     if (uploadPreset == null)
                         throw new Exception($"Missing upload preset called {preset.UploadService}");
@@ -1171,6 +1185,7 @@ internal class EncodingManager
                     if (history.Result != 200)
                         throw new Exception(history.Message);
 
+                    uploadedToCloud = preset.OutputDestination == OutputDestinations.Cloud;
                     SetUpload(id, true, history.GetLink(uploadPreset), history.DeletionLink);
                 }
                 catch (Exception e)
@@ -1257,7 +1272,8 @@ internal class EncodingManager
             {
                 Update(id, "S.Encoder.Executing", true, true);
 
-                var command = preset.CustomCommands.Replace("{p}", "\"" + preset.FullPath + "\"").Replace("{f}", "\"" + Path.GetDirectoryName(preset.OutputFolder) + "\"").Replace("{u}", "\"" + GetUploadLink(id) + "\"");
+                var outputFolder = preset.OutputDestination == OutputDestinations.Cloud ? Path.GetDirectoryName(preset.FullPath) : Path.GetDirectoryName(preset.OutputFolder);
+                var command = preset.CustomCommands.Replace("{p}", "\"" + preset.FullPath + "\"").Replace("{f}", "\"" + outputFolder + "\"").Replace("{u}", "\"" + GetUploadLink(id) + "\"");
                 var output = "";
 
                 try
@@ -1311,6 +1327,12 @@ internal class EncodingManager
 
             #endregion
 
+            //Keep the temporary file when the clipboard still points at it.
+            var clipboardNeedsFile = preset.SaveToClipboard && preset.CopyType != CopyModes.Link;
+
+            if (uploadedToCloud && !clipboardNeedsFile)
+                DeleteCloudCopy(preset);
+
             if (!tokenSource.Token.IsCancellationRequested)
                 Update(id, EncodingStatus.Completed, preset.FullPath);
         }
@@ -1342,6 +1364,27 @@ internal class EncodingManager
             #endregion
 
             GC.Collect();
+        }
+    }
+
+    private static void DeleteCloudCopy(ExportPreset preset)
+    {
+        if (preset.OutputDestination != OutputDestinations.Cloud || string.IsNullOrWhiteSpace(preset.FullPath))
+            return;
+
+        try
+        {
+            if (File.Exists(preset.FullPath))
+                File.Delete(preset.FullPath);
+
+            var folder = Path.GetDirectoryName(preset.FullPath);
+
+            if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder) && !Directory.EnumerateFileSystemEntries(folder).Any())
+                Directory.Delete(folder);
+        }
+        catch (Exception ex)
+        {
+            LogWriter.Log(ex, "Cleaning the temporary cloud copy.");
         }
     }
 

@@ -1,0 +1,39 @@
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 09:10:16
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+
+► Title - 
+	On dispatcher unhandled exception - Unknown
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 09:10:52
+▬ Message - 
+	DialogResult can be set only after Window is created and shown as dialog.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	PresentationFramework
+▼ TargetSite - 
+	Void set_DialogResult(System.Nullable`1[System.Boolean])
+♠ StackTrace - 
+   at System.Windows.Window.set_DialogResult(Nullable`1 value)
+   at ScreenToGif.Windows.Other.VideoSource.CancelButton_Click(Object sender, RoutedEventArgs e) in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Other\VideoSource.xaml.cs:line 113
+   at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_0(Object state)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+
+----------------------------------
+

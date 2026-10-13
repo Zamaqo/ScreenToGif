@@ -1883,7 +1883,7 @@
     <!--Editor • Save as > Save options-->
     <s:String x:Key="S.SaveAs.SaveOptions">Export options</s:String>
     <s:String x:Key="S.SaveAs.SaveOptions.Partial">Export partially.</s:String>
-    <s:String x:Key="S.SaveAs.SaveOptions.PickFolder">Save the file to a folder of your choice.</s:String>
+    <s:String x:Key="S.SaveAs.SaveOptions.PickFolder">Save the file.</s:String>
     <s:String x:Key="S.SaveAs.SaveOptions.OverwriteMode">Overwrite?</s:String>
     <s:String x:Key="S.SaveAs.SaveOptions.OverwriteMode.Warn">Warn</s:String>
     <s:String x:Key="S.SaveAs.SaveOptions.OverwriteMode.Warn.Info">Only warns that another file exists with the same name.</s:String>
@@ -1927,6 +1927,12 @@
     
     <!--Editor • Save as > File-->
     <s:String x:Key="S.SaveAs.File">File</s:String>
+    <s:String x:Key="S.SaveAs.File.Destination">Save to</s:String>
+    <s:String x:Key="S.SaveAs.File.Destination.Computer">This computer</s:String>
+    <s:String x:Key="S.SaveAs.File.Destination.Computer.Info">Save the file to a folder on this computer.</s:String>
+    <s:String x:Key="S.SaveAs.File.Destination.Cloud">Cloud</s:String>
+    <s:String x:Key="S.SaveAs.File.Destination.Cloud.Info">Save the file to an enabled cloud service. The local copy is removed after a successful upload.</s:String>
+    <s:String x:Key="S.SaveAs.File.Cloud.Info">Enabled cloud services that accept this file type.</s:String>
     <s:String x:Key="S.SaveAs.File.Location">Destination folder.</s:String>
     <s:String x:Key="S.SaveAs.File.SelectFolder">Select the output folder</s:String>
     <s:String x:Key="S.SaveAs.File.Choose">Choose the location.&#x0d;Press Shift and click to&#x0d;select the filename too.</s:String>

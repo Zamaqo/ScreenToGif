@@ -367,24 +367,31 @@ public partial class ExportPanel : UserControl, IPanel
     private void LoadUploadPresets(ExportPreset preset, UploadPreset uploadPreset = null)
     {
         var type = (preset.Extension ?? preset.DefaultExtension) == ".zip" ? ExportFormats.Zip : preset.Type;
-        var list = UserSettings.All.UploadPresets?.OfType<UploadPreset>().Where(w => w.AllowedTypes.Count == 0 || w.AllowedTypes.Contains(type)).ToList() ?? new List<UploadPreset>();
+        var list = UserSettings.All.UploadPresets?.OfType<UploadPreset>().Where(w => w.IsEnabled && (w.AllowedTypes.Count == 0 || w.AllowedTypes.Contains(type))).ToList() ?? new List<UploadPreset>();
 
         //No need to adding grouping when there's no item to be displayed.
         if (list.Count == 0)
         {
             UploadPresetComboBox.ItemsSource = null;
+            CloudPresetComboBox.ItemsSource = null;
             UploadPresetComboBox.ItemsSource = list;
+            CloudPresetComboBox.ItemsSource = list;
             return;
         }
 
-        //Groups by authentication mode.
-        var lcv = new ListCollectionView(list.OrderBy(o => o.IsAnonymous).ThenBy(t => t.Title).ToList());
-        lcv.GroupDescriptions?.Add(new PropertyGroupDescription("Mode"));
+        //Groups by authentication mode. Each combo needs its own view.
+        var ordered = list.OrderBy(o => o.IsAnonymous).ThenBy(t => t.Title).ToList();
+        var uploadView = new ListCollectionView(ordered);
+        var cloudView = new ListCollectionView(ordered);
+        uploadView.GroupDescriptions?.Add(new PropertyGroupDescription("Mode"));
+        cloudView.GroupDescriptions?.Add(new PropertyGroupDescription("Mode"));
 
         var previous = preset.UploadService;
 
         UploadPresetComboBox.IsEnabled = true;
-        UploadPresetComboBox.ItemsSource = lcv;
+        CloudPresetComboBox.IsEnabled = true;
+        UploadPresetComboBox.ItemsSource = uploadView;
+        CloudPresetComboBox.ItemsSource = cloudView;
 
         if (uploadPreset != null && list.Contains(uploadPreset))
             preset.UploadService = uploadPreset.Title;
@@ -810,7 +817,7 @@ public partial class ExportPanel : UserControl, IPanel
 
         #endregion
 
-        if (CurrentPreset.PickLocation)
+        if (CurrentPreset.PickLocation && CurrentPreset.OutputDestination == OutputDestinations.Computer)
         {
             if (CurrentPreset.OverwriteMode != OverwriteModes.Allow && File.Exists(Path.Combine(CurrentPreset.OutputFolder, CurrentPreset.ResolvedFilename + CurrentPreset.Extension)))
             {
@@ -846,10 +853,16 @@ public partial class ExportPanel : UserControl, IPanel
             }
         }
 
-        if (CurrentPreset.UploadFile)
+        if (CurrentPreset.WillUpload)
         {
             var presetType = CurrentPreset.Extension == ".zip" ? ExportFormats.Zip : CurrentPreset.Type;
-            var upload = UserSettings.All.UploadPresets.OfType<UploadPreset>().FirstOrDefault(f => (f.AllowedTypes.Count == 0 || f.AllowedTypes.Contains(presetType)) && f.Title == CurrentPreset.UploadService);
+            var upload = UserSettings.All.UploadPresets.OfType<UploadPreset>().FirstOrDefault(f => f.IsEnabled && (f.AllowedTypes.Count == 0 || f.AllowedTypes.Contains(presetType)) && f.Title == CurrentPreset.UploadService);
+
+            if (upload == null)
+            {
+                RaiseValidatedEvent("S.SaveAs.Warning.Upload.None", StatusReasons.InvalidState);
+                return false;
+            }
 
             args = await PresetExtensions.IsValid(upload);
 
@@ -1597,7 +1610,7 @@ public partial class ExportPanel : UserControl, IPanel
         _searchTimer?.Stop();
 
         //If no file will be saved, there's no need to verify.
-        if (!preset.PickLocation || preset.CanExportMultipleFiles)
+        if (!preset.PickLocation || preset.OutputDestination == OutputDestinations.Cloud || preset.CanExportMultipleFiles)
         {
             FileExistsGrid.Visibility = Visibility.Collapsed;
             RaiseValidationRemovedEvent(StatusReasons.FileAlreadyExists);
@@ -1637,6 +1650,14 @@ public partial class ExportPanel : UserControl, IPanel
     }
 
     private void SaveType_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded)
+            return;
+
+        FilenameTextBox_TextChanged(null, null);
+    }
+
+    private void Destination_Checked(object sender, RoutedEventArgs e)
     {
         if (!IsLoaded)
             return;
@@ -1721,7 +1742,7 @@ public partial class ExportPanel : UserControl, IPanel
         if (PresetComboBox.SelectedItem is not ExportPreset preset)
             return;
 
-        if (UploadPresetComboBox.SelectedItem is not UploadPreset selected)
+        if (SelectedUploadPreset() is not UploadPreset selected)
             return;
 
         var upload = new Upload { CurrentPreset = selected.ShallowCopy(), IsEditing = true };
@@ -1746,7 +1767,7 @@ public partial class ExportPanel : UserControl, IPanel
 
     private void HistoryUploadPreset_Click(object sender, RoutedEventArgs e)
     {
-        if (UploadPresetComboBox.SelectedItem is not UploadPreset selected)
+        if (SelectedUploadPreset() is not UploadPreset selected)
             return;
 
         var history = new UploadHistory
@@ -1762,7 +1783,7 @@ public partial class ExportPanel : UserControl, IPanel
             return;
 
         //Ask if the user really wants to remove the preset.
-        if (UploadPresetComboBox.SelectedItem is not UploadPreset selected || !Dialog.Ask(LocalizationHelper.Get("S.SaveAs.Upload.Ask.Delete.Title"), LocalizationHelper.Get("S.SaveAs.Upload.Ask.Delete.Instruction"),
+        if (SelectedUploadPreset() is not UploadPreset selected || !Dialog.Ask(LocalizationHelper.Get("S.SaveAs.Upload.Ask.Delete.Title"), LocalizationHelper.Get("S.SaveAs.Upload.Ask.Delete.Instruction"),
                 LocalizationHelper.Get("S.SaveAs.Upload.Ask.Delete.Message")))
             return;
 
@@ -1774,6 +1795,12 @@ public partial class ExportPanel : UserControl, IPanel
             exportPreset.UploadService = null;
 
         LoadUploadPresets(preset);
+    }
+
+    private UploadPreset SelectedUploadPreset()
+    {
+        var combo = CurrentPreset?.OutputDestination == OutputDestinations.Cloud ? CloudPresetComboBox : UploadPresetComboBox;
+        return combo?.SelectedItem as UploadPreset;
     }
 
     private void ExportPanel_Unloaded(object sender, RoutedEventArgs e)

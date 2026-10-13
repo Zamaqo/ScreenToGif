@@ -5419,7 +5419,7 @@ namespace ScreenToGif.Windows
 
             EncodingManager.StartEncoding(copied, preset);
 
-            if (preset.ExportAsProjectToo)
+            if (preset.ExportAsProjectToo && preset.OutputDestination == OutputDestinations.Computer)
             {
                 var copiedAux = Project.CopyToExport(indexes, true);
 

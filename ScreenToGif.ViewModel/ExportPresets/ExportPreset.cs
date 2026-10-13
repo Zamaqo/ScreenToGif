@@ -37,6 +37,7 @@ public abstract class ExportPreset : BindableBase, IExportPreset
     private int _partialExportFrameEnd = 0;
     private string _partialExportFrameExpression;
     private bool _pickLocation = true;
+    private OutputDestinations _outputDestination = OutputDestinations.Computer;
     private OverwriteModes _overwriteMode;
     private bool _exportAsProjectToo;
     private bool _uploadFile;
@@ -245,6 +246,36 @@ public abstract class ExportPreset : BindableBase, IExportPreset
         set => SetProperty(ref _pickLocation, value);
     }
 
+    /// <summary>
+    /// Folder on this computer, or an enabled cloud service.
+    /// </summary>
+    public OutputDestinations OutputDestination
+    {
+        get => _outputDestination;
+        set
+        {
+            if (!SetProperty(ref _outputDestination, value))
+                return;
+
+            OnPropertyChanged(nameof(WillUpload));
+            OnPropertyChanged(nameof(ShowUploadOptions));
+        }
+    }
+
+    /// <summary>
+    /// True when this save uploads, either as the destination or as an extra copy.
+    /// </summary>
+    [IgnoreDataMember]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool WillUpload => UploadFile || OutputDestination == OutputDestinations.Cloud;
+
+    /// <summary>
+    /// True when the extra upload section should be shown (local save plus upload).
+    /// </summary>
+    [IgnoreDataMember]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool ShowUploadOptions => UploadFile && OutputDestination == OutputDestinations.Computer;
+
     public OverwriteModes OverwriteMode
     {
         get => _overwriteMode;
@@ -260,7 +291,14 @@ public abstract class ExportPreset : BindableBase, IExportPreset
     public bool UploadFile
     {
         get => _uploadFile;
-        set => SetProperty(ref _uploadFile, value);
+        set
+        {
+            if (!SetProperty(ref _uploadFile, value))
+                return;
+
+            OnPropertyChanged(nameof(WillUpload));
+            OnPropertyChanged(nameof(ShowUploadOptions));
+        }
     }
 
     public string UploadService
@@ -377,14 +415,17 @@ public abstract class ExportPreset : BindableBase, IExportPreset
                     return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Extension", StatusReasons.EmptyProperty));
             }
 
-            if (string.IsNullOrWhiteSpace(OutputFolder))
-                return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder", StatusReasons.EmptyProperty));
+            if (OutputDestination == OutputDestinations.Computer)
+            {
+                if (string.IsNullOrWhiteSpace(OutputFolder))
+                    return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder", StatusReasons.EmptyProperty));
 
-            if (OutputFolder.ToCharArray().Any(x => Path.GetInvalidPathChars().Contains(x)))
-                return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder.Invalid", StatusReasons.InvalidState));
+                if (OutputFolder.ToCharArray().Any(x => Path.GetInvalidPathChars().Contains(x)))
+                    return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder.Invalid", StatusReasons.InvalidState));
 
-            if (!Directory.Exists(OutputFolder))
-                return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder.NotExists", StatusReasons.InvalidState));
+                if (!Directory.Exists(OutputFolder))
+                    return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Folder.NotExists", StatusReasons.InvalidState));
+            }
 
             if (string.IsNullOrWhiteSpace(OutputFilename))
                 return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Filename", StatusReasons.EmptyProperty));
@@ -396,11 +437,11 @@ public abstract class ExportPreset : BindableBase, IExportPreset
         }
 
         //Upload set, but no service selected.
-        if (UploadFile && string.IsNullOrWhiteSpace(UploadService))
+        if (WillUpload && string.IsNullOrWhiteSpace(UploadService))
             return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Upload.None", StatusReasons.InvalidState));
 
         //Copy link to clipboard set, but no upload set.
-        if (SaveToClipboard && CopyType == CopyModes.Link && !UploadFile)
+        if (SaveToClipboard && CopyType == CopyModes.Link && !WillUpload)
             return Task.FromResult(new ValidatedEventArgs("S.SaveAs.Warning.Copy.Link", StatusReasons.InvalidState));
 
         //Custom command not set.
