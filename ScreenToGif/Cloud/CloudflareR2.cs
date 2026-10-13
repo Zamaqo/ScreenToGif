@@ -163,6 +163,22 @@ public class CloudflareR2 : IUploader
             throw new UploadException("Cloudflare R2 returned " + result.StatusCode + " while downloading: " + TrimResponse(result.Body));
     }
 
+    /// <summary>
+    /// True when an object with this key is already stored.
+    /// </summary>
+    public static async Task<bool> ExistsAsync(CloudflareR2Preset preset, string objectKey, CancellationToken cancellationToken)
+    {
+        var result = await SendSignedAsync(preset, HttpMethod.Head, objectKey, null, EmptyPayloadHash, null, TimeSpan.FromMinutes(1), cancellationToken);
+
+        if (result.StatusCode == 404)
+            return false;
+
+        if (!IsSuccess(result.StatusCode))
+            throw new UploadException("Cloudflare R2 returned " + result.StatusCode + " while checking for an existing file: " + TrimResponse(result.Body));
+
+        return true;
+    }
+
     public static string NormalizePrefix(string prefix)
     {
         var folder = (prefix ?? "").Replace('\\', '/').Trim().Trim('/');

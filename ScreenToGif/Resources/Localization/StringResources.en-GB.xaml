@@ -2000,6 +2000,8 @@
     <s:String x:Key="S.SaveAs.Dialogs.Overwrite.Title">Overwrite</s:String>
     <s:String x:Key="S.SaveAs.Dialogs.Overwrite.Instruction">Would you like to overwrite the file?</s:String>
     <s:String x:Key="S.SaveAs.Dialogs.Overwrite.Message">A file with the name '{0}' already exists in that folder.\r\nWould you like to overwrite it?</s:String>
+    <s:String x:Key="S.SaveAs.Dialogs.Overwrite.Cloud.Instruction">Overwrite existing file?</s:String>
+    <s:String x:Key="S.SaveAs.Dialogs.Overwrite.Cloud.Message">A file named '{0}' is already in this cloud folder.\r\nWould you like to overwrite it?</s:String>
     <s:String x:Key="S.SaveAs.Dialogs.OverwriteMultiple.Instruction">Would you like to overwrite the files?</s:String>
     <s:String x:Key="S.SaveAs.Dialogs.OverwriteMultiple.Message">One or more files with the same name already exist in that folder.\r\nWould you like to overwrite them?</s:String>
     

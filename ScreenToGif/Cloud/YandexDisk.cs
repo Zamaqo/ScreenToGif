@@ -148,6 +148,42 @@ public class YandexDisk : IUploader
             .ToList();
     }
 
+    public static async Task<bool> ExistsAsync(YandexPreset preset, string diskPath, CancellationToken cancellationToken)
+    {
+        var url = "https://cloud-api.yandex.net/v1/disk/resources?path=" + Uri.EscapeDataString(diskPath);
+        var handler = new HttpClientHandler
+        {
+            Proxy = WebHelper.GetProxy(),
+            PreAuthenticate = true,
+            UseDefaultCredentials = false
+        };
+
+        using (var client = new HttpClient(handler))
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, url)
+            {
+                Headers =
+                {
+                    { HttpRequestHeader.Authorization.ToString(), "OAuth " + preset.OAuthToken }
+                }
+            };
+
+            using (var response = await client.SendAsync(request, cancellationToken))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return false;
+
+                var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
+                var errorDescriptor = Serializer.Deserialize<ErrorDescriptor>(responseBody);
+
+                if (errorDescriptor?.Error != null)
+                    throw new UploadException(errorDescriptor.Error + ", " + errorDescriptor.Message + ", " + errorDescriptor.Description);
+
+                return response.IsSuccessStatusCode;
+            }
+        }
+    }
+
     public static async Task DownloadAsync(YandexPreset preset, string diskPath, string destinationPath, CancellationToken cancellationToken)
     {
         var link = await GetLinkAsync(preset, "https://cloud-api.yandex.net/v1/disk/resources/download?path=" + Uri.EscapeDataString(diskPath), cancellationToken);

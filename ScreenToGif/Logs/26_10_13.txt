@@ -73,3 +73,153 @@
 
 ----------------------------------
 
+► Title - 
+	Listing a cloud folder.
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 10:02:48
+▬ Message - 
+	The SSL connection could not be established, see inner exception.
+○ Type - 
+	System.Net.Http.HttpRequestException
+▲ Source - 
+	System.Net.Http
+▼ TargetSite - 
+	Void MoveNext()
+♠ StackTrace - 
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at ScreenToGif.Cloud.CloudflareR2.SendSignedAsync(CloudflareR2Preset preset, HttpMethod method, String objectKey, Stream body, String payloadHash, String contentType, TimeSpan timeout, CancellationToken cancellationToken, String canonicalQuery, String saveToPath) in C:\buildslocal\ScreenToGif\ScreenToGif\Cloud\CloudflareR2.cs:line 498
+   at ScreenToGif.Cloud.CloudflareR2.ListFolderAsync(CloudflareR2Preset preset, String prefix, CancellationToken cancellationToken) in C:\buildslocal\ScreenToGif\ScreenToGif\Cloud\CloudflareR2.cs:line 123
+   at ScreenToGif.Windows.Other.LoadFromCloud.LoadFolderAsync() in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Other\LoadFromCloud.xaml.cs:line 135
+
+▬▬ Message - 
+	Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host..
+○○ Type - 
+	System.IO.IOException
+▲▲ Source - 
+	System.Net.Sockets
+▼▼ TargetSite - 
+	Void ThrowException(System.Net.Sockets.SocketError, System.Threading.CancellationToken)
+♠♠ StackTrace - 
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+
+▬▬▬ Message - 
+	An existing connection was forcibly closed by the remote host.
+○○○ Type - 
+	System.Net.Sockets.SocketException
+▲▲▲ Source - 
+	
+▼▼▼ TargetSite - 
+	
+♠♠♠ StackTrace - 
+
+
+----------------------------------
+
+► Title - 
+	Persisting the current project info.
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 10:03:08
+▬ Message - 
+	Could not find a part of the path 'C:\Users\Mark\AppData\Local\Temp\ScreenToGif\Recording\2026-10-13 09-35-26\Project.json'.
+○ Type - 
+	System.IO.DirectoryNotFoundException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Microsoft.Win32.SafeHandles.SafeFileHandle CreateFile(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions)
+♠ StackTrace - 
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.File.OpenHandle(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.WriteToFile(String path, FileMode mode, ReadOnlySpan`1 contents, Encoding encoding)
+   at System.IO.File.WriteAllText(String path, String contents, Encoding encoding)
+   at ScreenToGif.Model.ProjectInfo.Persist(String path) in C:\buildslocal\ScreenToGif\ScreenToGif\Model\ProjectInfo.cs:line 153
+
+----------------------------------
+
+► Title - 
+	Key already registered: F12
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 10:42:56
+▬ Message - 
+	Hotkey already in use
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	ScreenToGif.Native
+▼ TargetSite - 
+	Void .ctor(System.Windows.Input.ModifierKeys, System.Windows.Input.Key, System.Action, Boolean)
+♠ StackTrace - 
+   at ScreenToGif.Native.Helpers.HotKey..ctor(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Native\Helpers\HotKey.cs:line 61
+   at ScreenToGif.Native.Helpers.HotKeyCollection.TryRegisterHotKey(ModifierKeys modifier, Key key, Action callback, Boolean unregisterFirst) in C:\buildslocal\ScreenToGif\ScreenToGif.Util\Native\HotKeyCollection.cs:line 59
+
+----------------------------------
+
+► Title - 
+	Import error
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 12:00:36
+▬ Message - 
+	No imaging component suitable to complete this operation was found.
+○ Type - 
+	System.NotSupportedException
+▲ Source - 
+	PresentationCore
+▼ TargetSite - 
+	System.Windows.Media.SafeMILHandle SetupDecoderFromUriOrStream(System.Uri, System.IO.Stream, System.Windows.Media.Imaging.BitmapCacheOption, System.Guid ByRef, Boolean ByRef, System.IO.Stream ByRef, System.IO.UnmanagedMemoryStream ByRef, Microsoft.Win32.SafeHandles.SafeFileHandle ByRef)
+♠ StackTrace - 
+   at System.Windows.Media.Imaging.BitmapDecoder.SetupDecoderFromUriOrStream(Uri uri, Stream stream, BitmapCacheOption cacheOption, Guid& clsId, Boolean& isOriginalWritable, Stream& uriStream, UnmanagedMemoryStream& unmanagedMemoryStream, SafeFileHandle& safeFilehandle)
+   at System.Windows.Media.Imaging.BitmapDecoder.CreateFromUriOrStream(Uri baseUri, Uri uri, Stream stream, BitmapCreateOptions createOptions, BitmapCacheOption cacheOption, RequestCachePolicy uriCachePolicy, Boolean insertInDecoderCache)
+   at System.Windows.Media.Imaging.BitmapImage.FinalizeCreation()
+   at ScreenToGif.Windows.Editor.ImportFromImage(String source, String pathTemp, Size& previousSize, Double& previousDpi, Boolean& warn, Boolean& warnSize) in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Editor.xaml.cs:line 4350
+   at ScreenToGif.Windows.Editor.InsertInternal(String fileName, String pathTemp, Size& previousSize, Double& previousDpi, Boolean& warn, Boolean& warnSize) in C:\buildslocal\ScreenToGif\ScreenToGif\Windows\Editor.xaml.cs:line 3946
+
+▬▬ Message - 
+	The component cannot be found. (0x88982F50)
+○○ Type - 
+	System.Runtime.InteropServices.COMException
+▲▲ Source - 
+	
+▼▼ TargetSite - 
+	
+♠♠ StackTrace - 
+
+
+----------------------------------
+
+► Title - 
+	Current domain unhandled exception - Unknown
+♦ [Version] Date/Hour - 
+	[2.43.2] 10/13/2026 12:03:40
+▬ Message - 
+	The Dispatcher is unable to request processing.  This is often because the application has starved the Dispatcher's message pump.
+○ Type - 
+	System.InvalidOperationException
+▲ Source - 
+	WindowsBase
+▼ TargetSite - 
+	Void OnRequestProcessingFailure(System.String)
+♠ StackTrace - 
+   at System.Windows.Threading.Dispatcher.OnRequestProcessingFailure(String methodName)
+   at System.Windows.Threading.Dispatcher.RequestForegroundProcessing()
+   at System.Windows.Threading.Dispatcher.CriticalRequestProcessing(Boolean force)
+   at System.Windows.Threading.Dispatcher.InvokeAsyncImpl(DispatcherOperation operation, CancellationToken cancellationToken)
+   at MS.Win32.HwndWrapper.Dispose(Boolean disposing, Boolean isHwndBeingDestroyed)
+   at MS.Win32.HwndWrapper.Finalize()
+   at System.GC.RunFinalizers()
+
+----------------------------------
+

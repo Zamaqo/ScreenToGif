@@ -23,6 +23,9 @@ using ScreenToGif.ViewModel.ExportPresets.Video.Mov;
 using ScreenToGif.ViewModel.ExportPresets.Video.Mp4;
 using ScreenToGif.ViewModel.ExportPresets.Video.Webm;
 using ScreenToGif.ViewModel.UploadPresets;
+using ScreenToGif.ViewModel.UploadPresets.Cloudflare;
+using ScreenToGif.ViewModel.UploadPresets.Yandex;
+using ScreenToGif.Cloud;
 using ScreenToGif.Windows;
 using ScreenToGif.Windows.Other;
 using System;
@@ -30,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -870,6 +874,18 @@ public partial class ExportPanel : UserControl, IPanel
             {
                 RaiseValidatedEvent(args);
                 return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(CurrentPreset.ResolvedFilename) && await CloudFileExists(upload, CurrentPreset.ResolvedFilename + (CurrentPreset.Extension ?? CurrentPreset.DefaultExtension)))
+            {
+                var fileName = CurrentPreset.ResolvedFilename + (CurrentPreset.Extension ?? CurrentPreset.DefaultExtension);
+
+                if (!Dialog.Ask(LocalizationHelper.Get("S.SaveAs.Dialogs.Overwrite.Title"), LocalizationHelper.Get("S.SaveAs.Dialogs.Overwrite.Cloud.Instruction"),
+                    LocalizationHelper.GetWithFormat("S.SaveAs.Dialogs.Overwrite.Cloud.Message", "A file named '{0}' is already in this cloud folder.\r\nWould you like to overwrite it?", fileName), false))
+                {
+                    RaiseValidatedEvent("S.SaveAs.Warning.Overwrite", StatusReasons.FileAlreadyExists);
+                    return false;
+                }
             }
         }
 
@@ -1795,6 +1811,19 @@ public partial class ExportPanel : UserControl, IPanel
             exportPreset.UploadService = null;
 
         LoadUploadPresets(preset);
+    }
+
+    private static async Task<bool> CloudFileExists(UploadPreset upload, string fileName)
+    {
+        switch (upload)
+        {
+            case CloudflareR2Preset cloudflare:
+                return await CloudflareR2.ExistsAsync(cloudflare, CloudflareR2.BuildObjectKey(cloudflare.Prefix, fileName), CancellationToken.None);
+            case YandexPreset yandex:
+                return await YandexDisk.ExistsAsync(yandex, "app:/" + fileName, CancellationToken.None);
+            default:
+                return false;
+        }
     }
 
     private UploadPreset SelectedUploadPreset()
