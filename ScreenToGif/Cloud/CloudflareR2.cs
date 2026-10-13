@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 using System.Threading.Tasks;
 using ScreenToGif.Domain.Interfaces;
 using ScreenToGif.Util;
@@ -106,6 +107,155 @@ public class CloudflareR2 : IUploader
 
         if (afterDelete.StatusCode != 404)
             throw new UploadException("The sample image is still in the bucket after delete (HTTP " + afterDelete.StatusCode + ").");
+    }
+
+    /// <summary>
+    /// Lists one folder level inside the preset prefix. Subfolders come back as entries that can be opened.
+    /// </summary>
+    public static async Task<IReadOnlyList<CloudEntry>> ListFolderAsync(CloudflareR2Preset preset, string prefix, CancellationToken cancellationToken)
+    {
+        var folder = NormalizePrefix(prefix);
+        var entries = new List<CloudEntry>();
+        string token = null;
+
+        for (var page = 0; page < 20; page++)
+        {
+            var result = await SendSignedAsync(preset, HttpMethod.Get, "", null, EmptyPayloadHash, null, TimeSpan.FromMinutes(1), cancellationToken, BuildListQuery(folder, token));
+
+            if (!IsSuccess(result.StatusCode))
+                throw new UploadException("Cloudflare R2 returned " + result.StatusCode + " while listing the folder: " + TrimResponse(result.Body));
+
+            var document = XDocument.Parse(Encoding.UTF8.GetString(result.Body));
+            var truncated = false;
+
+            foreach (var element in document.Descendants())
+            {
+                if (element.Name.LocalName == "IsTruncated")
+                    truncated = string.Equals(element.Value, "true", StringComparison.OrdinalIgnoreCase);
+                else if (element.Name.LocalName == "NextContinuationToken")
+                    token = element.Value;
+                else if (element.Name.LocalName == "Contents")
+                    AddFile(entries, folder, element);
+                else if (element.Name.LocalName == "CommonPrefixes")
+                    AddFolder(entries, folder, element);
+            }
+
+            if (!truncated || string.IsNullOrEmpty(token))
+                break;
+        }
+
+        return entries
+            .GroupBy(entry => entry.Key, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .OrderByDescending(entry => entry.IsFolder)
+            .ThenBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Downloads one object into a local file.
+    /// </summary>
+    public static async Task DownloadAsync(CloudflareR2Preset preset, string objectKey, string destinationPath, CancellationToken cancellationToken)
+    {
+        var result = await SendSignedAsync(preset, HttpMethod.Get, objectKey, null, EmptyPayloadHash, null, TimeSpan.FromMinutes(30), cancellationToken, null, destinationPath);
+
+        if (!IsSuccess(result.StatusCode))
+            throw new UploadException("Cloudflare R2 returned " + result.StatusCode + " while downloading: " + TrimResponse(result.Body));
+    }
+
+    public static string NormalizePrefix(string prefix)
+    {
+        var folder = (prefix ?? "").Replace('\\', '/').Trim().Trim('/');
+        return string.IsNullOrEmpty(folder) ? "" : folder + "/";
+    }
+
+    public static string ParentPrefix(string prefix, string rootPrefix)
+    {
+        var current = NormalizePrefix(prefix);
+        var root = NormalizePrefix(rootPrefix);
+
+        if (current.Length <= root.Length)
+            return root;
+
+        var trimmed = current.TrimEnd('/');
+        var slash = trimmed.LastIndexOf('/');
+        return slash < 0 ? root : NormalizePrefix(trimmed.Substring(0, slash));
+    }
+
+    private static string BuildListQuery(string prefix, string continuationToken)
+    {
+        var items = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["delimiter"] = "/",
+            ["list-type"] = "2",
+            ["max-keys"] = "1000",
+            ["prefix"] = prefix ?? ""
+        };
+
+        if (!string.IsNullOrEmpty(continuationToken))
+            items["continuation-token"] = continuationToken;
+
+        return string.Join("&", items.Select(item => Uri.EscapeDataString(item.Key) + "=" + Uri.EscapeDataString(item.Value)));
+    }
+
+    private static void AddFile(List<CloudEntry> entries, string folder, XElement contents)
+    {
+        var key = ChildValue(contents, "Key");
+
+        if (string.IsNullOrWhiteSpace(key) || key == folder || key.EndsWith("/", StringComparison.Ordinal))
+        {
+            if (!string.IsNullOrWhiteSpace(key) && key.EndsWith("/", StringComparison.Ordinal) && key != folder)
+                entries.Add(FolderEntry(folder, key));
+
+            return;
+        }
+
+        long.TryParse(ChildValue(contents, "Size"), out var size);
+
+        entries.Add(new CloudEntry
+        {
+            Name = NameInFolder(folder, key),
+            Key = key,
+            IsFolder = false,
+            Size = size,
+            SizeLabel = CloudEntry.FormatSize(size),
+            ModifiedLabel = CloudEntry.FormatModified(ChildValue(contents, "LastModified"))
+        });
+    }
+
+    private static void AddFolder(List<CloudEntry> entries, string folder, XElement prefixes)
+    {
+        var key = ChildValue(prefixes, "Prefix");
+
+        if (!string.IsNullOrWhiteSpace(key) && key != folder)
+            entries.Add(FolderEntry(folder, key));
+    }
+
+    private static CloudEntry FolderEntry(string folder, string key)
+    {
+        var name = NameInFolder(folder, key).Trim('/');
+
+        return new CloudEntry
+        {
+            Name = name,
+            Key = key,
+            IsFolder = true,
+            SizeLabel = "",
+            ModifiedLabel = ""
+        };
+    }
+
+    private static string NameInFolder(string folder, string key)
+    {
+        if (!string.IsNullOrEmpty(folder) && key.StartsWith(folder, StringComparison.Ordinal))
+            return key.Substring(folder.Length);
+
+        return key;
+    }
+
+    private static string ChildValue(XElement parent, string localName)
+    {
+        return parent.Elements().FirstOrDefault(element => element.Name.LocalName == localName)?.Value;
     }
 
     public static string SampleKey(CloudflareR2Preset preset)
@@ -297,7 +447,7 @@ public class CloudflareR2 : IUploader
         }
     }
 
-    private static async Task<(int StatusCode, byte[] Body)> SendSignedAsync(CloudflareR2Preset preset, HttpMethod method, string objectKey, Stream body, string payloadHash, string contentType, TimeSpan timeout, CancellationToken cancellationToken)
+    private static async Task<(int StatusCode, byte[] Body)> SendSignedAsync(CloudflareR2Preset preset, HttpMethod method, string objectKey, Stream body, string payloadHash, string contentType, TimeSpan timeout, CancellationToken cancellationToken, string canonicalQuery = null, string saveToPath = null)
     {
         var host = BuildHost(preset.AccountId);
         var bucket = (preset.Bucket ?? "").Trim().ToLowerInvariant();
@@ -315,7 +465,7 @@ public class CloudflareR2 : IUploader
         if (!string.IsNullOrEmpty(contentType))
             headers["content-type"] = contentType;
 
-        var authorization = AwsSigV4.BuildAuthorization(method.Method, canonicalUri, "", headers, payloadHash, preset.AccessKeyId.Trim(), preset.SecretAccessKey.Trim(), dateStamp, "auto", "s3");
+        var authorization = AwsSigV4.BuildAuthorization(method.Method, canonicalUri, canonicalQuery ?? "", headers, payloadHash, preset.AccessKeyId.Trim(), preset.SecretAccessKey.Trim(), dateStamp, "auto", "s3");
         var handler = new HttpClientHandler
         {
             Proxy = WebHelper.GetProxy(),
@@ -328,7 +478,12 @@ public class CloudflareR2 : IUploader
             client.Timeout = timeout;
             client.DefaultRequestHeaders.ExpectContinue = false;
 
-            var request = new HttpRequestMessage(method, "https://" + host + canonicalUri);
+            var address = "https://" + host + canonicalUri;
+
+            if (!string.IsNullOrEmpty(canonicalQuery))
+                address += "?" + canonicalQuery;
+
+            var request = new HttpRequestMessage(method, address);
             request.Headers.Host = host;
             request.Headers.TryAddWithoutValidation("Authorization", authorization);
             request.Headers.TryAddWithoutValidation("x-amz-date", timestamp);
@@ -340,8 +495,21 @@ public class CloudflareR2 : IUploader
                 request.Content.Headers.TryAddWithoutValidation("Content-Type", contentType);
             }
 
-            using (var response = await client.SendAsync(request, cancellationToken))
+            using (var response = await client.SendAsync(request, string.IsNullOrEmpty(saveToPath) ? HttpCompletionOption.ResponseContentRead : HttpCompletionOption.ResponseHeadersRead, cancellationToken))
             {
+                if (!string.IsNullOrEmpty(saveToPath) && response.IsSuccessStatusCode)
+                {
+                    var directory = Path.GetDirectoryName(saveToPath);
+
+                    if (!string.IsNullOrEmpty(directory))
+                        Directory.CreateDirectory(directory);
+
+                    await using (var file = new FileStream(saveToPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                        await response.Content.CopyToAsync(file, cancellationToken);
+
+                    return ((int)response.StatusCode, Array.Empty<byte>());
+                }
+
                 var responseBody = await response.Content.ReadAsByteArrayAsync(cancellationToken);
                 return ((int)response.StatusCode, responseBody);
             }

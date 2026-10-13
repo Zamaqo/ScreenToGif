@@ -17,6 +17,7 @@ using ScreenToGif.ViewModel.ExportPresets;
 using ScreenToGif.ViewModel.ExportPresets.Image;
 using ScreenToGif.ViewModel.ExportPresets.Other;
 using ScreenToGif.ViewModel.Tasks;
+using ScreenToGif.ViewModel.UploadPresets;
 using ScreenToGif.Windows.Other;
 using System;
 using System.Collections.Generic;
@@ -956,23 +957,42 @@ namespace ScreenToGif.Windows
             e.Handled = true;
             Pause();
 
-            var ofd = new OpenFileDialog
-            {
-                Multiselect = true,
-                AddExtension = true,
-                CheckFileExists = true,
-                Title = LocalizationHelper.Get("S.Editor.File.OpenMediaProject"),
-                Filter = $"{LocalizationHelper.Get("S.Editor.File.All")} (*.apng, *.avi, *.avif, *.bmp, *.gif, *.jpg, *.jpeg, *.mkv, *.mp4, *.png, *.stg, *.webp, *.webm, *.wmv, *.zip)|*.apng;*.avi;*.avif;*.bmp;*.gif;*.jpg;*.jpeg;*.mkv;*.mp4;*.png;*.stg;*.webp;*.webm;*.wmv;*.zip|" +
-                         $"{LocalizationHelper.Get("S.Editor.File.Image")} (*.apng, *.avif, *.bmp, *.gif, *.jpg, *.jpeg, *.png)|*.apng;*.avif;*.bmp;*.gif;*.jpg;*.jpeg;*.png|" +
-                         $"{LocalizationHelper.Get("S.Editor.File.Video")} (*.avi, *.mkv, *.mp4, *.webp, *.webm, *.wmv)|*.avi;*.mkv;*.mp4;*.webp;*.webm;*.wmv|" +
-                         $"{LocalizationHelper.Get("S.Editor.File.Project")} (*.stg, *.zip) |*.stg;*.zip",
-            };
+            List<string> paths = null;
 
-            var result = ofd.ShowDialog();
+            if (UserSettings.All.UploadPresets?.OfType<UploadPreset>().Any(preset => preset.IsEnabled) == true)
+            {
+                var picker = new LoadFromCloud { Owner = this };
+
+                if (picker.ShowDialog() != true)
+                    return;
+
+                if (!picker.UseComputer)
+                    paths = picker.LocalPaths;
+            }
+
+            if (paths == null)
+            {
+                var ofd = new OpenFileDialog
+                {
+                    Multiselect = true,
+                    AddExtension = true,
+                    CheckFileExists = true,
+                    Title = LocalizationHelper.Get("S.Editor.File.OpenMediaProject"),
+                    Filter = $"{LocalizationHelper.Get("S.Editor.File.All")} (*.apng, *.avi, *.avif, *.bmp, *.gif, *.jpg, *.jpeg, *.mkv, *.mp4, *.png, *.stg, *.webp, *.webm, *.wmv, *.zip)|*.apng;*.avi;*.avif;*.bmp;*.gif;*.jpg;*.jpeg;*.mkv;*.mp4;*.png;*.stg;*.webp;*.webm;*.wmv;*.zip|" +
+                             $"{LocalizationHelper.Get("S.Editor.File.Image")} (*.apng, *.avif, *.bmp, *.gif, *.jpg, *.jpeg, *.png)|*.apng;*.avif;*.bmp;*.gif;*.jpg;*.jpeg;*.png|" +
+                             $"{LocalizationHelper.Get("S.Editor.File.Video")} (*.avi, *.mkv, *.mp4, *.webp, *.webm, *.wmv)|*.avi;*.mkv;*.mp4;*.webp;*.webm;*.wmv|" +
+                             $"{LocalizationHelper.Get("S.Editor.File.Project")} (*.stg, *.zip) |*.stg;*.zip",
+                };
+
+                if (ofd.ShowDialog() != true)
+                    return;
+
+                paths = ofd.FileNames.ToList();
+            }
 
             #region Validation
 
-            var extensionList = ofd.FileNames.Select(s => Path.GetExtension(s).ToLowerInvariant()).ToList();
+            var extensionList = paths.Select(s => Path.GetExtension(s).ToLowerInvariant()).ToList();
 
             var media = new[] { "apng", "avi", "avif", "bmp", "gif", "jpg", "jpeg", "mkv", "mp4", "png", "webp", "webm", "wmv" };
 
@@ -987,9 +1007,9 @@ namespace ScreenToGif.Windows
 
             #endregion
 
-            if (result.HasValue && result.Value)
+            if (paths.Count > 0)
             {
-                await Task.Run(() => ImportFrom(ofd.FileNames.ToList()));
+                await Task.Run(() => ImportFrom(paths));
 
                 CommandManager.InvalidateRequerySuggested();
             }

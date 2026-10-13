@@ -1002,6 +1002,17 @@
     <!--Editor • File dialogs (does not work with new line characters)-->
     <s:String x:Key="S.Editor.File.OpenMedia">Open a media (image or video) file</s:String>
     <s:String x:Key="S.Editor.File.OpenMediaProject">Open a Media (Image or Video) or a Project File</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Title">Load files</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Computer">This computer</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Computer.Info">Browse a folder on this computer.</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Service">Cloud service</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Up">Up one folder</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Open">Open</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Empty">This folder is empty.</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Loading">Loading the folder...</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Downloading">Downloading...</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Select">Select a file to open.</s:String>
+    <s:String x:Key="S.Editor.File.Cloud.Unsupported">This service does not keep files in a folder that can be browsed.</s:String>
     <s:String x:Key="S.Editor.File.All">All supported files</s:String>
     <s:String x:Key="S.Editor.File.Image">Image</s:String>
     <s:String x:Key="S.Editor.File.Video">Video</s:String>

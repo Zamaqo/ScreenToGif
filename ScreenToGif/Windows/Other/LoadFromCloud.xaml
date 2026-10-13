@@ -1,0 +1,97 @@
+<n:ExWindow x:Class="ScreenToGif.Windows.Other.LoadFromCloud"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:n="clr-namespace:ScreenToGif.Controls"
+            Title="{DynamicResource S.Editor.File.Cloud.Title}" Height="480" Width="640" MinHeight="360" MinWidth="480"
+            Icon="/ScreenToGif;component/Resources/Logo.ico" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="10,10,10,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{DynamicResource S.Editor.File.Cloud.Service}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+            <ComboBox Grid.Column="1" x:Name="ServiceComboBox" MinHeight="28" DisplayMemberPath="Title" SelectionChanged="ServiceComboBox_SelectionChanged"/>
+            <n:ExtendedButton Grid.Column="2" x:Name="ComputerButton" Margin="8,0,0,0" MinWidth="140" Text="{DynamicResource S.Editor.File.Cloud.Computer}"
+                              Icon="{StaticResource Vector.Open}" ContentWidth="16" ContentHeight="16" Click="ComputerButton_Click"
+                              ToolTip="{DynamicResource S.Editor.File.Cloud.Computer.Info}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10,0,10,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <n:ExtendedButton x:Name="UpButton" Style="{StaticResource Style.Button.NoText}" Icon="{StaticResource Vector.Backward}" ContentWidth="16" ContentHeight="16"
+                              ToolTip="{DynamicResource S.Editor.File.Cloud.Up}" Click="UpButton_Click"/>
+            <TextBlock x:Name="PathText" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Element.Foreground}"/>
+        </Grid>
+
+        <ListBox Grid.Row="2" x:Name="FileList" Margin="10,0" SelectionMode="Extended" MouseDoubleClick="FileList_MouseDoubleClick"
+                 Background="{DynamicResource Element.Background}" BorderBrush="{DynamicResource Element.Border}" Foreground="{DynamicResource Element.Foreground}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="4,3"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Element.Foreground}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="72"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="16" Height="16" VerticalAlignment="Center" Opacity="{DynamicResource Element.Opacity}" Background="{StaticResource Vector.File}">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="{StaticResource Vector.File}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Vector.Folder}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Element.Foreground}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding SizeLabel}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                        <TextBlock Grid.Column="3" Text="{Binding ModifiedLabel}" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="3" x:Name="StatusText" Margin="12,6" TextWrapping="Wrap" Foreground="{DynamicResource Element.Foreground.Medium}"/>
+
+        <Grid Grid.Row="4" Background="{DynamicResource Panel.Background.Level3}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <n:ExtendedButton Grid.Column="1" x:Name="OpenButton" Text="{DynamicResource S.Editor.File.Cloud.Open}" Icon="{StaticResource Vector.Ok}"
+                              ContentWidth="18" ContentHeight="18" MinWidth="90" Margin="5" Click="OpenButton_Click"/>
+            <n:ExtendedButton Grid.Column="2" x:Name="CancelButton" Text="{DynamicResource S.Cancel}" Icon="{StaticResource Vector.Cancel}"
+                              ContentWidth="18" ContentHeight="18" MinWidth="90" Margin="5" IsCancel="True"/>
+        </Grid>
+    </Grid>
+</n:ExWindow>
